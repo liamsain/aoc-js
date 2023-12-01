@@ -1,0 +1,15 @@
+{
+  "name": "aoc",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "createToday": "node create-day.js -today",
+    "createDay": "node ./create-day.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
