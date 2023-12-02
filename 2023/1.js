@@ -1,6 +1,6 @@
 import { getAdventOfCodeData } from '../utils.js';
 const start = performance.now();
-const input = await getAdventOfCodeData(2023, 1, process.env.session_id);
+const input = await getAdventOfCodeData(2023, 1);
 
 let firstResult = 0;
 let secondResult = 0;

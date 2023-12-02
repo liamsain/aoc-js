@@ -3,9 +3,13 @@
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import { config } from 'dotenv';
+
+// Load environment variables from .env file
+config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-export async function getAdventOfCodeData(year, day, session_id) {
+export async function getAdventOfCodeData(year, day) {
   // check the file system using fs to see whether that file exists:
   const yearPath = path.join(__dirname, year.toString());
   const inputFilePath = `${yearPath}/${year}-${day}-input.txt`;
@@ -22,7 +26,7 @@ export async function getAdventOfCodeData(year, day, session_id) {
   const response = await fetch(url, {
     method: 'GET',
     headers: {
-      'Cookie': `session=${session_id}`,
+      'Cookie': `session=${process.env.session_id}`,
       'User-Agent': 'liamkennedy89@outlook.com'
     },
   });

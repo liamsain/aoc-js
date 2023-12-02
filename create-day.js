@@ -46,7 +46,7 @@ function createDayFile(year, day) {
   const dayPath = path.join(yearPath, `/${day}.js`);
   if (!fs.existsSync(dayPath)) {
     const dayTemplate = `import { getAdventOfCodeData } from '../utils.js';
-  const input = await getAdventOfCodeData(${year}, ${day}, process.env.session_id);
+  const input = await getAdventOfCodeData(${year}, ${day});
   const start = performance.now();
   // code here
 
