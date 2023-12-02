@@ -1,5 +1,6 @@
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { getAdventOfCodeData } from './utils.js';
 import fs from 'fs';
 // args: 
 // -y year
@@ -53,6 +54,8 @@ function createDayFile(year, day) {
   const end = performance.now();
   console.log('time taken', end - start, 'ms');
     `;
+    getAdventOfCodeData(year, day);
+
     fs.writeFileSync(dayPath, dayTemplate);
   }
 }
