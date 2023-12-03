@@ -28,8 +28,8 @@ const args = process.argv.slice(2);
 const parsedArgs = parseArgs(args);
 if (parsedArgs.today === 'true') {
   const today = new Date();
-  const year = today.getFullYear();
-  const day = today.getDate();
+  const year = today.getFullYear().toString();
+  const day = today.getDate().toString();
   createDayFile(year, day);
 } else {
   createDayFile(parsedArgs.year, parsedArgs.day);
