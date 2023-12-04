@@ -18,11 +18,7 @@ int main()
   }
 
   LARGE_INTEGER frequency, start, stop;
-
-  // Get the frequency of the performance counter
   QueryPerformanceFrequency(&frequency);
-
-  // Get the starting time
   QueryPerformanceCounter(&start);
 
   // Your function or code here
