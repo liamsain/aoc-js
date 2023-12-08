@@ -1,7 +1,25 @@
 import { getAdventOfCodeData } from '../utils.js';
 const input = await getAdventOfCodeData(2023, 7);
 const start = performance.now();
-
+// const input = `2345A 1
+// Q2KJJ 13
+// Q2Q2Q 19
+// T3T3J 17
+// T3Q33 11
+// 2345J 3
+// J345A 2
+// 32T3K 5
+// T55J5 29
+// KK677 7
+// KTJJT 34
+// QQQJA 31
+// JJJJJ 37
+// JAAAA 43
+// AAAAJ 59
+// AAAAA 61
+// 2AAAA 23
+// 2JJJJ 53
+// JJJJ2 41`;
 let firstResult = 0;
 let secondResult = 0;
 const cardValueLookup = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
@@ -33,21 +51,24 @@ const HandType = {
 };
 
 function pushPart2Hand (line, handType, jokerCount) {
-  if (handType == HandType.highcard) {
+  if (handType == HandType.fours) {
     if (jokerCount == 0) {
-      highcards2.push(line);
-    } else if (jokerCount == 1) {
-      onepairs2.push(line);
-    } 
-    
-  } else if (handType == HandType.onepair) {
-    if (jokerCount == 0) {
-      onepairs2.push(line);
-    } else if (jokerCount == 1) {
-      threes2.push(line);
-    } else if (jokerCount == 2) {
-      onepairs2.push(line);
+      fours2.push(line);
+    } else {
+      fives2.push(line);
     }
+  } else if (handType == HandType.fullhouse) {
+    if (jokerCount == 0) {
+      fullhouse2.push(line);
+    } else {
+      fives2.push(line);
+    } 
+  } else if (handType == HandType.threes) {
+    if (jokerCount == 0) {
+      threes2.push(line);
+    } else if (jokerCount == 1 || jokerCount == 3) {
+      fours2.push(line);
+    } 
   } else if (handType == HandType.twopair) {
     if (jokerCount == 0) {
       twopairs2.push(line);
@@ -56,23 +77,19 @@ function pushPart2Hand (line, handType, jokerCount) {
     } else if (jokerCount == 2) {
       fours2.push(line);
     }
-  } else if (handType == HandType.threes) {
+  } else if (handType == HandType.onepair) {
     if (jokerCount == 0) {
+      onepairs2.push(line);
+    } else if (jokerCount == 1) {
       threes2.push(line);
-    } else if (jokerCount == 1 || jokerCount == 3) {
-      fours2.push(line);
-    } 
-  } else if (handType == HandType.fullhouse) {
+    } else if (jokerCount == 2) {
+      threes2.push(line);
+    }
+  } else if (handType == HandType.highcard) {
     if (jokerCount == 0) {
-      fullhouse2.push(line);
-    } else if (jokerCount == 2 || jokerCount == 3) {
-      fives2.push(line);
-    } 
-  } else if (handType == HandType.fours) {
-    if (jokerCount == 0) {
-      fours2.push(line);
-    } else if (jokerCount == 1 || jokerCount == 4) {
-      fives2.push(line);
+      highcards2.push(line);
+    } else if (jokerCount == 1) {
+      onepairs2.push(line);
     }
   }
 };
@@ -182,7 +199,6 @@ allHands.forEach((hand, index) => {
 
 
 const end = performance.now();
-debugger;
 console.log('first\t', firstResult);
 console.log('second\t', secondResult);
 // 248820779 too low
