@@ -13,13 +13,20 @@ input.split('\n').forEach(line => {
     if (lastArr.every(el => el === lastArr[0])) {
       break;
     }
-    for (let i = 0;i < lastArr.length - 1;i++) {
-      const result = lastArr[i + 1] - lastArr[i];
-      nextArr.push(result);
-    }
-    arrHolder.push([...nextArr]);
-    nextArr = []
-  }
+// <<<<<<< HEAD
+//     for (let i = 0;i < lastArr.length - 1;i++) {
+//       const result = lastArr[i + 1] - lastArr[i];
+//       nextArr.push(result);
+// =======
+//     for (let i = arrHolder.length - 2; i >= 0;i--) {
+//       const prev = arrHolder[i + 1];
+//       const current = arrHolder[i];
+//       current.push(current[current.length - 1] + prev[prev.length -1]);
+// // >>>>>>> f48f711190f78dbf7961e95a1252a6d085d08eea
+//     }
+    // arrHolder.push([...nextArr]);
+    // nextArr = []
+  // }
   for (let i = arrHolder.length - 2; i >= 0;i--) {
     const prev = arrHolder[i + 1];
     const current = arrHolder[i];
@@ -31,7 +38,7 @@ input.split('\n').forEach(line => {
   firstResult += firstArr[firstArr.length - 1];
   secondResult += firstArr[0];
 
-});
+}});
 
 const end = performance.now();
 console.log('first: ', firstResult);
