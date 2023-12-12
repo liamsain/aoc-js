@@ -47,12 +47,12 @@ function createDayFile(year, day) {
   const dayPath = path.join(yearPath, `/${day}.js`);
   if (!fs.existsSync(dayPath)) {
     const dayTemplate = `import { getAdventOfCodeData } from '../utils.js';
-  const input = await getAdventOfCodeData(${year}, ${day});
-  const start = performance.now();
-  // code here
+const input = await getAdventOfCodeData(${year}, ${day});
+const start = performance.now();
 
-  const end = performance.now();
-  console.log('time taken', end - start, 'ms');
+
+const end = performance.now();
+console.log('time taken', end - start, 'ms');
     `;
     getAdventOfCodeData(year, day);
 

@@ -44,14 +44,14 @@ export class NodeMap {
   // arg: {input: '', startChar: '', endChar: ''}
   constructor(arg) {
     // nodeLines: [[{x: 0, y: 0, ch: 'a', distance: null}]]
-    this.nodeLines = [];
+    this.lines = [];
     arg.input.split('\n').forEach((line, lineIndex) => {
       const nodeLine = [];
       line.split('').forEach((ch, chIndex) => {
         const n = { x: chIndex, y: lineIndex, ch, distance: null }
         nodeLine.push(n);
       });
-      this.nodeLines.push(nodeLine);
+      this.lines.push(nodeLine);
     });
   }
 
@@ -60,6 +60,20 @@ export class NodeMap {
       return this.nodeLines[y][x];
     }
     return null;
+  }
+  drawMap() {
+    let img = '';
+    this.lines.forEach(l => {
+      let line = ''
+      l.forEach(n => {
+        line += n.ch;
+      });
+      img += (`${line}\n`);
+    });
+    console.log(img);
+  }
+  lineIncludesCh(lineNumber, ch) {
+    return this.lines[lineNumber].map(n => n.ch).includes(ch);
   }
 }
 
