@@ -40,3 +40,26 @@ export async function getAdventOfCodeData(year, day) {
   return data.trim(); // Trim to remove any leading or trailing whitespace
 }
 
+export class NodeMap {
+  // arg: {input: '', startChar: '', endChar: ''}
+  constructor(arg) {
+    // nodeLines: [[{x: 0, y: 0, ch: 'a', distance: null}]]
+    this.nodeLines = [];
+    arg.input.split('\n').forEach((line, lineIndex) => {
+      const nodeLine = [];
+      line.split('').forEach((ch, chIndex) => {
+        const n = { x: chIndex, y: lineIndex, ch, distance: null }
+        nodeLine.push(n);
+      });
+      this.nodeLines.push(nodeLine);
+    });
+  }
+
+  getNode(x, y) {
+    if (x > 0 && x < this.nodeLines[0].length && y > 0 && y < this.nodeLines.length) {
+      return this.nodeLines[y][x];
+    }
+    return null;
+  }
+}
+
