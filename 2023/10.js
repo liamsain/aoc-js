@@ -14,6 +14,12 @@ const NodeTypes = {
   Ground: '.',
   Start: 'S',
 };
+const Directions = {
+  Up: 'up', 
+  Down: 'down', 
+  Left: 'left',
+  Right: 'right'
+};
 lines.forEach((line, lineIndex) => {
   const nodeMapLine = [];
   line.split('').forEach((ch, chIndex) => {
@@ -22,10 +28,40 @@ lines.forEach((line, lineIndex) => {
   nodeMap.push(nodeMapLine);
 });
 
-function getValidNeighbours(coord) {
-  const result = [];
-  const currentNode = nodeMap[coord[1]][coord[0]]
+function nodeLookup (coords = [0, 0]) {
+  return nodeMap[coords[1]][coords[0]];
+}
 
+function sourceCanMoveToTarget(src, t, direction) {
+  const validTargets = [];
+  if (src == NodeTypes.NorthSouth) {
+    if (direction == Directions.Up) {
+      validTargets.push(NodeTypes.NorthSouth);
+      validTargets.push(NodeTypes.SouthWest);
+      validTargets.push(NodeTypes.SouthEast);
+    } else if (direction == Directions.Down) {
+      validTargets.push(NodeTypes.NorthSouth);
+      validTargets.push(NodeTypes.NorthWest);
+      validTargets.push(NodeTypes.NorthEast);
+    }
+  } else if (src == NodeTypes.EastWest) {
+    if (direction == Directions.Right) {
+      validTargets.push(NodeTypes.EastWest);
+      validTargets.push(NodeTypes.NorthWest);
+      validTargets.push(NodeTypes.SouthWest);
+    }
+  }
+  return validTargets.includes(t);
+}
+
+function getValidNeighbours(n) {
+  const result = [];
+  if (n.ch == NodeTypes.NorthSouth) {
+    if (n.x > 0) {
+      const above = nodeLookup([n.x, n.y]);
+      if (above.ch == NodeTypes.NorthSouth ||
+    }
+  }
 
   return result;
 }
