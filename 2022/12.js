@@ -94,8 +94,8 @@ while (q.length > 0) {
     console.log(currentNode.distance);
     break;
   }
-  await(delay(0.1));
-  drawNodeMap(currentNode);
+  // await(delay(0.1));
+  // drawNodeMap(currentNode);
   const neighbours = getValidNeighbours(currentNode.x, currentNode.y);
   neighbours.forEach(neighbour => {
     if (neighbour.distance == null) {

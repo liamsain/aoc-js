@@ -23,7 +23,6 @@ import { getAdventOfCodeData } from '../utils.js';
       const prev = arrHolder[i + 1];
       const current = arrHolder[i];
       current.push(current[current.length - 1] + prev[prev.length -1]);
-      
     }
     const firstArr = arrHolder[0];
     firstResult += firstArr[firstArr.length - 1];
