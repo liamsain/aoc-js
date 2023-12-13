@@ -1,17 +1,18 @@
 import { getAdventOfCodeData, NodeMap } from '../utils.js';
-// const input = await getAdventOfCodeData(2023, 11);
-const input = `...#......
-.......#..
-#.........
-..........
-......#...
-.#........
-.........#
-..........
-.......#..
-#...#.....`;
+const input = await getAdventOfCodeData(2023, 11);
+// const input = `...#......
+// .......#..
+// #.........
+// ..........
+// ......#...
+// .#........
+// .........#
+// ..........
+// .......#..
+// #...#.....`;
 const start = performance.now();
 const lines = input.split('\n');
+let firstResult = 0;
 
 function expandSpace() {
   const lineIndexesToModify = [];
@@ -41,18 +42,32 @@ function expandSpace() {
     }
   });
 }
-expandSpace();
-let currentGalaxy = 1;
-for (let i = 0; i < lines.length;i++) {
-  for (let j = 0; j < lines[0].length;j++) {
-    if (lines[i][j] == '#') {
-      lines[i] = lines[i].substring(0, j) + currentGalaxy + lines[i].substring(j + 1);
-      currentGalaxy += 1;
+function getGalaxyDirectory() {
+  let result = [];
+  let currentGalaxy = 0;
+  for (let i = 0; i < lines.length;i++) {
+    for (let j = 0; j < lines[0].length;j++) {
+      if (lines[i][j] == '#') {
+        // lines[i] = lines[i].substring(0, j) + currentGalaxy + lines[i].substring(j + 1);
+        result.push([j, i]);
+        currentGalaxy += 1;
+      }
     }
+  }
+  return result;
+}
+
+expandSpace();
+const galaxyDirectory = getGalaxyDirectory();
+
+for (let i = 0; i < galaxyDirectory.length; i++) {
+  for (let j = i + 1;j < galaxyDirectory.length;j++) {
+    const src = galaxyDirectory[i];
+    const t = galaxyDirectory[j];
+    firstResult += Math.abs(t[0] - src[0]) + Math.abs(t[1] - src[1]);
   }
 }
 
-
-
 const end = performance.now();
+console.log('first: ', firstResult); // 9323130 too low
 console.log('time taken', end - start, 'ms');

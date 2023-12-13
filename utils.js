@@ -21,7 +21,6 @@ export async function getAdventOfCodeData(year, day) {
     console.log(`Input file for ${year} day ${day} does not exist. Fetching from Advent of Code...`);
   }
 
-
   const url = `https://adventofcode.com/${year}/day/${day}/input`;
   const response = await fetch(url, {
     method: 'GET',
@@ -37,43 +36,93 @@ export async function getAdventOfCodeData(year, day) {
 
   const data = await response.text();
   fs.writeFileSync(inputFilePath, data.trim());
+  console.log(`Saved input data for ${year} day ${day} to ${inputFilePath}`);
   return data.trim(); // Trim to remove any leading or trailing whitespace
 }
 
 export class NodeMap {
-  // arg: {input: '', startChar: '', endChar: ''}
+  // arg: {lines: ['asdf', 'asdf']}
   constructor(arg) {
-    // nodeLines: [[{x: 0, y: 0, ch: 'a', distance: null}]]
-    this.lines = [];
-    arg.input.split('\n').forEach((line, lineIndex) => {
-      const nodeLine = [];
+    // rows: [[{x: 0, y: 0, ch: 'a', distance: null}]]
+    this.rows = [];
+    arg.lines.forEach((line, lineIndex) => {
+      const nodeRow = [];
       line.split('').forEach((ch, chIndex) => {
         const n = { x: chIndex, y: lineIndex, ch, distance: null }
-        nodeLine.push(n);
+        nodeRow.push(n);
       });
-      this.lines.push(nodeLine);
+      this.rows.push(nodeRow);
     });
   }
 
   getNode(x, y) {
-    if (x > 0 && x < this.nodeLines[0].length && y > 0 && y < this.nodeLines.length) {
-      return this.nodeLines[y][x];
+    if (x >= 0 && x < this.rows[0].length && y >= 0 && y < this.rows.length) {
+      return this.rows[y][x];
     }
     return null;
   }
-  drawMap() {
-    let img = '';
-    this.lines.forEach(l => {
-      let line = ''
-      l.forEach(n => {
-        line += n.ch;
-      });
-      img += (`${line}\n`);
-    });
-    console.log(img);
+  getNodesAround(x, y) {
+    let result = [];
+    const left = this.getNode(x - 1, y);
+    if (left) {
+      result.push(left);
+    }
+    const right = this.getNode(x + 1, y);
+    if (right) {
+      result.push(right);
+    }
+    const up = this.getNode(x, y - 1);
+    if (up) {
+      result.push(up);
+    }
+    const down = this.getNode(x, y + 1);
+    if (down) {
+      result.push(down);
+    }
+    return result;
   }
-  lineIncludesCh(lineNumber, ch) {
-    return this.lines[lineNumber].map(n => n.ch).includes(ch);
+  drawMap(currentNode) {
+    let mapStr = '';
+    this.rows.forEach(row => {
+      let rowStr = ''
+      row.forEach(n => {
+        if (currentNode && n.x == currentNode.x && n.y == currentNode.y) {
+          rowStr += 'C';
+        } else {
+          rowStr += n.ch;
+        }
+      });
+      mapStr += (`${rowStr}\n`);
+    });
+    console.clear();
+    console.log(mapStr);
+  }
+  lineIncludesCh(rowNumber, ch) {
+    return this.rows[rowNumber].map(n => n.ch).includes(ch);
+  }
+  stepsBetweenTwoCoords(src = [0, 0], target = [0, 0]) {
+    let steps = 0;
+    const srcNode = this.getNode(src[0], src[1]);
+    srcNode.distance = 0;
+    const q = [srcNode];
+    let currentNode;
+    while(q.length) {
+      currentNode = q.shift();
+      // this.drawMap(currentNode);
+      // debugger;
+      if (currentNode.x == target[0] && currentNode.y == target[1]) {
+        steps = currentNode.distance;
+        break;
+      }
+      const neighbours = this.getNodesAround(currentNode.x, currentNode.y);
+      neighbours.forEach(n => {
+        if (!n.distance) {
+          n.distance = currentNode.distance + 1;
+          q.push(n);
+        }
+      });
+    }
+    return steps;
   }
 }
 
