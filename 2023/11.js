@@ -1,54 +1,32 @@
 import { getAdventOfCodeData, NodeMap } from '../utils.js';
 const input = await getAdventOfCodeData(2023, 11);
-// const input = `...#......
-// .......#..
-// #.........
-// ..........
-// ......#...
-// .#........
-// .........#
-// ..........
-// .......#..
-// #...#.....`;
 const start = performance.now();
 const lines = input.split('\n');
 let firstResult = 0;
+let secondResult = 0;
 
-function expandSpace() {
-  const lineIndexesToModify = [];
-
+function getEmptyColumnAndRowIndexes() {
+  const result = {columns: [], rows: []}
   lines.forEach((line, lineIndex) => {
     if (!line.includes('#')) {
-      lineIndexesToModify.push(lineIndex);
+      result.rows.push(lineIndex);
     }
   });
-
-  const emptyLine = lines[lineIndexesToModify[0]];
-  lineIndexesToModify.forEach((lineIndex, i) => {
-    lines.splice(lineIndex + i, 0, emptyLine);
-  });
-
-  const columnNumbersToModify = [];
-  lines[0].split('').forEach((ch, i) => {
+   lines[0].split('').forEach((ch, i) => {
     if (lines.every(l => l[i] == '.')) {
-      columnNumbersToModify.push(i);
+      result.columns.push(i);
     }
   });
-  columnNumbersToModify.forEach((colIndex, i) => {
-    for (let j = 0; j < lines.length; j++) {
-      const newLine = lines[j].split('');
-      newLine.splice(colIndex + i, 0, '.');
-      lines[j] = newLine.join('');
-    }
-  });
+ 
+  return result;
 }
+const emptyColumnAndRowIndexes = getEmptyColumnAndRowIndexes();
 function getGalaxyDirectory() {
   let result = [];
   let currentGalaxy = 0;
   for (let i = 0; i < lines.length;i++) {
     for (let j = 0; j < lines[0].length;j++) {
       if (lines[i][j] == '#') {
-        // lines[i] = lines[i].substring(0, j) + currentGalaxy + lines[i].substring(j + 1);
         result.push([j, i]);
         currentGalaxy += 1;
       }
@@ -57,17 +35,25 @@ function getGalaxyDirectory() {
   return result;
 }
 
-expandSpace();
 const galaxyDirectory = getGalaxyDirectory();
 
 for (let i = 0; i < galaxyDirectory.length; i++) {
   for (let j = i + 1;j < galaxyDirectory.length;j++) {
     const src = galaxyDirectory[i];
     const t = galaxyDirectory[j];
-    firstResult += Math.abs(t[0] - src[0]) + Math.abs(t[1] - src[1]);
+    const highestX = Math.max(src[0], t[0]);
+    const lowestX = Math.min(src[0], t[0]);
+    const highestY = Math.max(src[1], t[1]);
+    const lowestY = Math.min(src[1], t[1]);
+    const columnBoundaryCrosses = emptyColumnAndRowIndexes.columns.filter(c => c > lowestX && c < highestX).length;
+    const rowBoundaryCrosses = emptyColumnAndRowIndexes.rows.filter(r => r > lowestY && r < highestY).length;
+    firstResult += Math.abs(t[0] - src[0]) + Math.abs(t[1] - src[1]) + columnBoundaryCrosses + rowBoundaryCrosses;
+    secondResult += Math.abs(t[0] - src[0]) + Math.abs(t[1] - src[1]) + (columnBoundaryCrosses * (1000000 - 1))+ (rowBoundaryCrosses * (1000000 - 1));
+
   }
 }
 
 const end = performance.now();
-console.log('first: ', firstResult); // 9323130 too low
+console.log('first: ', firstResult); 
+console.log('second: ', secondResult); 
 console.log('time taken', end - start, 'ms');
