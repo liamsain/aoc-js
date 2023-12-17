@@ -43,18 +43,26 @@ while(beams.some(b => b.alive)) {
         beam.dir = 'up';
       }
     } else if (tileCh == '|') {
-      // if dir right, go up, push new beam down
-      // if dir left, go up, push new beam down
-      // if dir down, go down
-      // if dir up, go up
+      if (d == 'right' || d == 'left') {
+        beam.dir = 'up';
+        beams.push({coord: [...beam.coord], dir: 'down', alive: true});
+      } 
     } else if (tileCh == '-') {
-      // if dir right, go right
-      // if dir up, go left, push new beam right
-      // if dir down, go left, push new beam right
-      // if dir left, go left
+      if (d == 'up' || d == 'down') {
+        beam.dir = 'left';
+        beams.push({coord: [...beam.coord], dir: 'right', alive: true});
+      }
     }
     moveBeamInDirection(beam);
   }
+}
+
+function getTileAtCoord(coord) {
+  const row = lines[coord[1]];
+  if (row) {
+    return lines[coord[1]][coord[0]]
+  }
+  return undefined;
 }
 
 function moveBeamInDirection(beam) {
