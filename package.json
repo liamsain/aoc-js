@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "createToday": "node ./create-day.js -- -today true",
+    "ct": "npm run createToday",
     "createDay": "node ./create-day.js"
   },
   "keywords": [],
