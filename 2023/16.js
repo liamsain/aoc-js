@@ -16,7 +16,27 @@ const lines = input.split('\n');
 const energisedTiles = {};
 const beams = [{coord: [0,0], dir: 'right', alive: true}];
 
+function draw() {
+  const Dirs = {'up': '^', 'down': 'v', 'left': '<', right: '>'};
+  let str = '';
+  lines.forEach((line, y) => {
+    let lineStr = '';
+    line.split('').forEach((ch, x) => {
+      const beam = beams.find(b => b.coord[0] == x && b.coord[1] == y);
+      if (beam) {
+        lineStr += Dirs[beam.dir];
+      } else {
+        lineStr += ch;
+      }
+    });
+    str += lineStr + '\n';
+  });
+  console.clear();
+  console.log(str);
+}
+
 while(beams.some(b => b.alive)) {
+  draw();
   const beamsLength = beams.length
   for (let i = 0; i < beamsLength;i++) {
     const beam = beams[i];
@@ -58,13 +78,6 @@ while(beams.some(b => b.alive)) {
   }
 }
 
-function getTileAtCoord(coord) {
-  const row = lines[coord[1]];
-  if (row) {
-    return lines[coord[1]][coord[0]]
-  }
-  return undefined;
-}
 
 function moveBeamInDirection(beam) {
   if (beam.dir == 'right') {
