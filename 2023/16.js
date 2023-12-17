@@ -12,14 +12,16 @@ const input = String.raw`.|...\....
 ..//.|....`;
 const start = performance.now();
 const lines = input.split('\n');
+let firstResult = 0;
   
 const energisedTiles = {};
-const beams = [{coord: [0,0], dir: 'right', alive: true}];
+const energisedTilesWithDir = {};
+let beams = [{coord: [0,0], dir: 'right', alive: true, visited: {}}];
 
-function draw() {
+function draw(beam) {
   const Dirs = {'up': '^', 'down': 'v', 'left': '<', right: '>'};
   let str = '';
-  lines.forEach((line, y) => {
+  lines.slice(0, beam.coord[1] + 10 ).forEach((line, y) => {
     let lineStr = '';
     line.split('').forEach((ch, x) => {
       const beam = beams.find(b => b.coord[0] == x && b.coord[1] == y);
@@ -34,13 +36,30 @@ function draw() {
   console.clear();
   console.log(str);
 }
+async function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+} 
 
 while(beams.some(b => b.alive)) {
-  draw();
-  const beamsLength = beams.length
-  for (let i = 0; i < beamsLength;i++) {
+  beams = beams.filter(b => b.alive);
+  await delay(300);
+  for (let i = 0; i < beams.length;i++) {
     const beam = beams[i];
-    energisedTiles[`${beam.coord[0]}${beam.coord[1]}`] = true;
+    draw(beam);
+    const beamCoordKey = `${beam.coord[0]}${beam.coord[1]}`;
+    const beamCoordDirKey = `${beamCoordKey}${beam.dir}`;
+    // debugger;
+    if (!energisedTiles[beamCoordKey]) {
+      energisedTiles[beamCoordKey] = true;
+      firstResult += 1;
+    }
+
+    if (energisedTilesWithDir[beamCoordDirKey]) {
+      beam.alive = false;
+      continue
+    } else {
+      energisedTilesWithDir[beamCoordDirKey] = true;
+    }
     const tileCh = lines[beam.coord[1]][beam.coord[0]];
     const d = beam.dir;
     if (tileCh == '/') {
@@ -66,12 +85,14 @@ while(beams.some(b => b.alive)) {
     } else if (tileCh == '|') {
       if (d == 'right' || d == 'left') {
         beam.dir = 'up';
-        beams.push({coord: [...beam.coord], dir: 'down', alive: true});
+        const newBeam = {coord: [...beam.coord], dir: 'down', alive: true};
+        beams.push(newBeam);
       } 
     } else if (tileCh == '-') {
       if (d == 'up' || d == 'down') {
         beam.dir = 'left';
-        beams.push({coord: [...beam.coord], dir: 'right', alive: true});
+        const newBeam = {coord: [...beam.coord], dir: 'right', alive: true};
+        beams.push(newBeam);
       }
     }
     moveBeamInDirection(beam);
@@ -115,4 +136,5 @@ function moveBeamInDirection(beam) {
 
 const end = performance.now();
 console.log('time taken', end - start, 'ms');
+console.log('first', firstResult); // 6506, 6507   too low
     
