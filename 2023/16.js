@@ -12,6 +12,7 @@ const input = String.raw`.|...\....
 ..//.|....`;
 const start = performance.now();
 const lines = input.split('\n');
+  
 const energisedTiles = {};
 const beams = [{coord: [0,0], dir: 'right', alive: true}];
 
@@ -32,7 +33,7 @@ while(beams.some(b => b.alive)) {
       } else {
         beam.dir = 'left';
       }
-    } else if (tileCh == '\') {
+    } else if (tileCh == '\\') {
       if (d == 'right') {
         beam.dir = 'down';
       } else if (d == 'up') {
