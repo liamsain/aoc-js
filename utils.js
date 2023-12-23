@@ -126,3 +126,31 @@ export class NodeMap {
   }
 }
 
+export function it(desc, fn) {
+  try {
+    console.log('\x1b[32m%s\x1b[0m', desc);
+    fn();
+  } catch (error) {
+    // console.log('\n');
+    // console.log('\x1b[31m%s\x1b[0m', '\u2718 ' + desc);
+    // console.error(error.message);
+  }
+}
+export function assert(isTrue) {
+  if (!isTrue) {
+    throw new Error();
+  }
+}
+export function equals(a, b) {
+  if (a != b) {
+    console.log('\x1b[31m%s\x1b[0m', '\u2718 ', `${a} != ${b}`);
+    // throw new Error(`${a} != ${b}`);
+  } else {
+    console.log('\x1b[32m%s\x1b[0m', '\u2714 ', `${a} == ${b}`);
+  }
+}
+export async function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+

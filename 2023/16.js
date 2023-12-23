@@ -1,3 +1,5 @@
+// first problem: infinite loop where beam would go round and round. fixed with storing coord and direction
+// second problem: works on test data, not on big input.
 import { getAdventOfCodeData } from '../utils.js';
 // const input = await getAdventOfCodeData(2023, 16);
 const input = String.raw`.|...\....
@@ -12,19 +14,15 @@ const input = String.raw`.|...\....
 ..//.|....`;
 const start = performance.now();
 const lines = input.split('\n');
-let firstResult = 0;
-  
-const energisedTiles = {};
-const energisedTilesWithDir = {};
-let beams = [{coord: [0,0], dir: 'right', alive: true, visited: {}}];
 
-function draw(beam) {
-  const Dirs = {'up': '^', 'down': 'v', 'left': '<', right: '>'};
+const Dirs = {up: '^', down: 'v', left: '<', right: '>'};
+function draw(lines, beams, energisedTilesWithDir) {
   let str = '';
-  lines.slice(0, beam.coord[1] + 10 ).forEach((line, y) => {
+  lines.slice(0, 50).forEach((line, y) => {
     let lineStr = '';
     line.split('').forEach((ch, x) => {
       const beam = beams.find(b => b.coord[0] == x && b.coord[1] == y);
+      // const energisedTile = energisedTilesWithDir[`${x}${y}`];
       if (beam) {
         lineStr += Dirs[beam.dir];
       } else {
@@ -35,72 +33,78 @@ function draw(beam) {
   });
   console.clear();
   console.log(str);
+  return str;
 }
-async function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-} 
+ 
+export function part1(lines, debug = false) {
+  const energisedTiles = {};
+  const energisedTilesWithDir = {};
+  let beams = [{coord: [0,0], dir: 'right', alive: true}];
 
-while(beams.some(b => b.alive)) {
-  beams = beams.filter(b => b.alive);
-  await delay(300);
-  for (let i = 0; i < beams.length;i++) {
-    const beam = beams[i];
-    draw(beam);
-    const beamCoordKey = `${beam.coord[0]}${beam.coord[1]}`;
-    const beamCoordDirKey = `${beamCoordKey}${beam.dir}`;
-    // debugger;
-    if (!energisedTiles[beamCoordKey]) {
-      energisedTiles[beamCoordKey] = true;
-      firstResult += 1;
-    }
+  let result = 0;
+  while(beams.some(b => b.alive)) {
+    beams = beams.filter(b => b.alive);
+    // draw(lines, beams);
 
-    if (energisedTilesWithDir[beamCoordDirKey]) {
-      beam.alive = false;
-      continue
-    } else {
-      energisedTilesWithDir[beamCoordDirKey] = true;
-    }
-    const tileCh = lines[beam.coord[1]][beam.coord[0]];
-    const d = beam.dir;
-    if (tileCh == '/') {
-      if (d == 'right') {
-        beam.dir = 'up';
-      } else if (d == 'up') {
-        beam.dir = 'right';
-      } else if (d == 'left') {
-        beam.dir = 'down';
+    for (let i = 0; i < beams.length;i++) {
+      const beam = beams[i];
+      const beamCoordKey = `${beam.coord[0]}${beam.coord[1]}`;
+      const beamCoordDirKey = `${beamCoordKey}${beam.dir}`;
+      if (!energisedTiles[beamCoordKey]) {
+        energisedTiles[beamCoordKey] = true;
+        result += 1;
+      }
+
+      if (energisedTilesWithDir[beamCoordDirKey]) {
+        beam.alive = false;
+        continue
       } else {
-        beam.dir = 'left';
+        energisedTilesWithDir[beamCoordDirKey] = beam.dir;
       }
-    } else if (tileCh == '\\') {
-      if (d == 'right') {
-        beam.dir = 'down';
-      } else if (d == 'up') {
-        beam.dir = 'left';
-      } else if (d == 'down') {
-        beam.dir = 'right';
-      } else {
-        beam.dir = 'up';
+      const tileCh = lines[beam.coord[1]][beam.coord[0]];
+      const d = beam.dir;
+      if (tileCh == '/') {
+        if (d == 'right') {
+          beam.dir = 'up';
+        } else if (d == 'up') {
+          beam.dir = 'right';
+        } else if (d == 'left') {
+          beam.dir = 'down';
+        } else {
+          beam.dir = 'left';
+        }
+      } else if (tileCh == '\\') {
+        debugger;
+        if (d == 'right') {
+          beam.dir = 'down';
+        } else if (d == 'up') {
+          beam.dir = 'left';
+        } else if (d == 'down') {
+          beam.dir = 'right';
+        } else {
+          beam.dir = 'up';
+        }
+      } else if (tileCh == '|') {
+        if (d == 'right' || d == 'left') {
+          beam.dir = 'up';
+          const newBeam = {coord: [...beam.coord], dir: 'down', alive: true};
+          beams.push(newBeam);
+        } 
+      } else if (tileCh == '-') {
+        if (d == 'up' || d == 'down') {
+          beam.dir = 'left';
+          const newBeam = {coord: [...beam.coord], dir: 'right', alive: true};
+          beams.push(newBeam);
+        }
       }
-    } else if (tileCh == '|') {
-      if (d == 'right' || d == 'left') {
-        beam.dir = 'up';
-        const newBeam = {coord: [...beam.coord], dir: 'down', alive: true};
-        beams.push(newBeam);
-      } 
-    } else if (tileCh == '-') {
-      if (d == 'up' || d == 'down') {
-        beam.dir = 'left';
-        const newBeam = {coord: [...beam.coord], dir: 'right', alive: true};
-        beams.push(newBeam);
-      }
+      moveBeamInDirection(beam, lines);
     }
-    moveBeamInDirection(beam);
   }
+  return result;
 }
 
 
-function moveBeamInDirection(beam) {
+function moveBeamInDirection(beam, lines) {
   if (beam.dir == 'right') {
     const rightTile = lines[beam.coord[1]][beam.coord[0] + 1];
     if (rightTile) {
@@ -132,7 +136,7 @@ function moveBeamInDirection(beam) {
   }
 }
 
-
+const firstResult = part1(lines);
 
 const end = performance.now();
 console.log('time taken', end - start, 'ms');
