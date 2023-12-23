@@ -1,6 +1,6 @@
 // first problem: infinite loop where beam would go round and round. fixed with storing coord and direction
 // second problem: works on test data, not on big input.
-import { getAdventOfCodeData } from '../utils.js';
+import { getAdventOfCodeData, drawLines } from '../utils.js';
 // const input = await getAdventOfCodeData(2023, 16);
 const input = String.raw`.|...\....
 |.-.\.....
@@ -16,24 +16,17 @@ const start = performance.now();
 const lines = input.split('\n');
 
 const Dirs = {up: '^', down: 'v', left: '<', right: '>'};
-function draw(lines, beams, energisedTilesWithDir) {
-  let str = '';
-  lines.slice(0, 50).forEach((line, y) => {
-    let lineStr = '';
-    line.split('').forEach((ch, x) => {
-      const beam = beams.find(b => b.coord[0] == x && b.coord[1] == y);
-      // const energisedTile = energisedTilesWithDir[`${x}${y}`];
-      if (beam) {
-        lineStr += Dirs[beam.dir];
-      } else {
-        lineStr += ch;
-      }
-    });
-    str += lineStr + '\n';
+function draw(lines, beams) {
+  const drawnLines = drawLines(lines, (ch, x, y) => {
+    const beam = beams.find(b => b.coord[0] == x && b.coord[1] == y);
+    if (beam) {
+      return Dirs[beam.dir];
+    } else {
+      return ch;
+    }
   });
   console.clear();
-  console.log(str);
-  return str;
+  console.log(drawnLines);
 }
  
 export function part1(lines, debug = false) {
@@ -44,6 +37,7 @@ export function part1(lines, debug = false) {
   let result = 0;
   while(beams.some(b => b.alive)) {
     beams = beams.filter(b => b.alive);
+    // debugger;
     // draw(lines, beams);
 
     for (let i = 0; i < beams.length;i++) {
@@ -74,7 +68,6 @@ export function part1(lines, debug = false) {
           beam.dir = 'left';
         }
       } else if (tileCh == '\\') {
-        debugger;
         if (d == 'right') {
           beam.dir = 'down';
         } else if (d == 'up') {

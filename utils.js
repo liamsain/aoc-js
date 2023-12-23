@@ -153,4 +153,16 @@ export async function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
 }
 
+export function drawLines(lines, fn) {
+  let str = '';
+  lines.forEach((line, y) => {
+    let lineStr = '';
+    line.split('').forEach((ch, x) => {
+      lineStr += fn(ch, x, y);
+      });
+    str += lineStr + '\n';
+  });
+  return str;
+
+}
 
