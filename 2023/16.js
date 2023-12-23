@@ -39,8 +39,6 @@ export function part1Debug(lines) {
 
   function step () {
     beams = beams.filter(b => b.alive);
-    // debugger;
-    // draw(lines, beams);
 
     for (let i = 0; i < beams.length;i++) {
       const beam = beams[i];
@@ -48,7 +46,6 @@ export function part1Debug(lines) {
       const beamCoordDirKey = `${beamCoordKey}${beam.dir}`;
       if (!energisedTiles[beamCoordKey]) {
         energisedTiles[beamCoordKey] = true;
-        // result += 1;
       }
 
       if (energisedTilesWithDir[beamCoordDirKey]) {
@@ -103,7 +100,7 @@ export function part1Debug(lines) {
 export function getTotalEnergizedTiles(lines, startCoord = [0, 0], startDir = 'right') {
   const energisedTiles = {};
   const energisedTilesWithDir = {};
-  let beams = [{coord: [0,0], dir: startDir, alive: true}];
+  let beams = [{coord: startCoord, dir: startDir, alive: true}];
 
   let result = 0;
   while(beams.some(b => b.alive)) {
@@ -199,10 +196,32 @@ function moveBeamInDirection(beam, lines) {
 }
 
 const firstResult = getTotalEnergizedTiles(lines);
-const initialPositions = [];
+
+const initialPositions = []; // [{x, y, dir }]
+lines[0].split('').forEach((val, i) => {  
+  initialPositions.push({x: i, y: 0, dir: 'down'}); // top line
+  initialPositions.push({x: i, y: lines.length - 1, dir: 'up'}); // bottom line
+});
+initialPositions.push({x: 0, y: 0, dir: 'right'}); // top left
+initialPositions.push({x: lines[0].length - 1, y: 0, dir: 'left'}); // top right
+initialPositions.push({x: 0, y: lines.length -1, dir: 'right'}); // bottom left
+initialPositions.push({x: lines[0].length - 1, y: lines.length -1, dir: 'left'}); // bottom right
+lines.forEach((line, i) => {
+  initialPositions.push({x: 0, y: i, dir: 'right'});
+  initialPositions.push({x: lines[0].length - 1, y: i, dir: 'left'});
+});
+
+let secondResult = 0;
+initialPositions.forEach((pos) => {
+  const res = getTotalEnergizedTiles(lines, [pos.x, pos.y], pos.dir);
+  if (res > secondResult) {
+    secondResult = res;
+  }
+});
 
 
 const end = performance.now();
 console.log('time taken', end - start, 'ms');
-console.log('first', firstResult); // 6506, 6507   too low
+console.log('first', firstResult); 
+console.log('second', secondResult);
     
