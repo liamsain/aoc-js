@@ -100,16 +100,14 @@ export function part1Debug(lines) {
   return { step, beams };
 }
  
-export function part1(lines, debug = false) {
+export function getTotalEnergizedTiles(lines, startCoord = [0, 0], startDir = 'right') {
   const energisedTiles = {};
   const energisedTilesWithDir = {};
-  let beams = [{coord: [0,0], dir: 'right', alive: true}];
+  let beams = [{coord: [0,0], dir: startDir, alive: true}];
 
   let result = 0;
   while(beams.some(b => b.alive)) {
     beams = beams.filter(b => b.alive);
-    // debugger;
-    // draw(lines, beams);
 
     for (let i = 0; i < beams.length;i++) {
       const beam = beams[i];
@@ -200,7 +198,9 @@ function moveBeamInDirection(beam, lines) {
   }
 }
 
-const firstResult = part1(lines);
+const firstResult = getTotalEnergizedTiles(lines);
+const initialPositions = [];
+
 
 const end = performance.now();
 console.log('time taken', end - start, 'ms');

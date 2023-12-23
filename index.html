@@ -9,9 +9,6 @@
   <pre id="show"></pre>
   <script src="./2023/16.js" type="module"></script>
   <script type="module">
-    export function what() {
-      console.log('what');
-    }
     document.querySelector('#step-btn').addEventListener('click', onStep)
     import { getAdventOfCodeData, drawLines } from './utils.js';
     import { part1Debug, Dirs } from './2023/16.js';
@@ -47,8 +44,6 @@
         onStep();
       }
     });
-    // give lines to func
-    // func returns step fn, which returns lines in their current state
   </script>
 </body>
 </html>
