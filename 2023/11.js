@@ -1,4 +1,4 @@
-import { getAdventOfCodeData, NodeMap } from '../utils.js';
+import { getAdventOfCodeData, NodeMap } from '../node-utils.js';
 const input = await getAdventOfCodeData(2023, 11);
 const start = performance.now();
 const lines = input.split('\n');

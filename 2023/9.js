@@ -1,4 +1,4 @@
-import { getAdventOfCodeData } from '../utils.js';
+import { getAdventOfCodeData } from '../node-utils.js';
 const input = await getAdventOfCodeData(2023, 9);
 let firstResult = 0;
 let secondResult = 0;

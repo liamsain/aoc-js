@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>16</title>
+</head>
+<body>
+  <button id="step-btn" >Step</button>
+  <pre id="show"></pre>
+  <script src="./2023/16.js" type="module"></script>
+  <script type="module">
+    export function what() {
+      console.log('what');
+    }
+    document.querySelector('#step-btn').addEventListener('click', onStep)
+    import { getAdventOfCodeData, drawLines } from './utils.js';
+    import { part1Debug, Dirs } from './2023/16.js';
+    const data = await getAdventOfCodeData(2023, 16);
+    const lines = data.split('\n');
+    const { step, beams } = part1Debug(lines);
+    let localBeams = beams;
+    function getLinesMarkup() {
+      return drawLines(lines, (ch, x, y) => {
+        const beam = localBeams.find(b => b.coord[0] == x && b.coord[1] == y);
+        let result = '';
+        if (beam) {
+          result = Dirs[beam.dir];
+        } else {
+          result = ch;
+        }
+        if (x == 0) {
+          return y + result;
+        }
+        return result;
+      });
+    }
+    let markup = getLinesMarkup();
+    document.querySelector('#show').innerHTML = markup;
+    function onStep() {
+      const res = step();
+      localBeams = res.beams;
+      markup = getLinesMarkup();
+      document.querySelector('#show').innerHTML = markup;
+    }
+    addEventListener("keydown", (event) => {
+      if (event.key == 'Enter') {
+        onStep();
+      }
+    });
+    // give lines to func
+    // func returns step fn, which returns lines in their current state
+  </script>
+</body>
+</html>

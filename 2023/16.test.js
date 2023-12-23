@@ -1,4 +1,4 @@
-import { it, assert, equals, getAdventOfCodeData } from '../utils.js';
+import { it, equals } from '../node-utils.js';
 import { part1 } from './16.js'
 
 it('Part 1 ', async() => {

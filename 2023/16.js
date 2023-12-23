@@ -1,21 +1,24 @@
 // first problem: infinite loop where beam would go round and round. fixed with storing coord and direction
-// second problem: works on test data, not on big input.
-import { getAdventOfCodeData, drawLines } from '../utils.js';
-// const input = await getAdventOfCodeData(2023, 16);
-const input = String.raw`.|...\....
-|.-.\.....
-.....|-...
-........|.
-..........
-.........\
-..../.\\..
-.-.-/..|..
-.|....-|.\
-..//.|....`;
+// second problem: works on test data, not on big input. solution: draw grid to browser and check where it goes wrong
+// turns out I was building keys like this `${x}${y}dir` the x and y would sometimes overlap, 
+// causing the program to think it had already seen that coord and direction 
+import { drawLines } from '../utils.js';
+import { getAdventOfCodeData } from '../node-utils.js';
+const input = await getAdventOfCodeData(2023, 16);
+// const input = String.raw`.|...\....
+// |.-.\.....
+// .....|-...
+// ........|.
+// ..........
+// .........\
+// ..../.\\..
+// .-.-/..|..
+// .|....-|.\
+// ..//.|....`;
 const start = performance.now();
 const lines = input.split('\n');
 
-const Dirs = {up: '^', down: 'v', left: '<', right: '>'};
+export const Dirs = {up: '^', down: 'v', left: '<', right: '>'};
 function draw(lines, beams) {
   const drawnLines = drawLines(lines, (ch, x, y) => {
     const beam = beams.find(b => b.coord[0] == x && b.coord[1] == y);
@@ -27,6 +30,74 @@ function draw(lines, beams) {
   });
   console.clear();
   console.log(drawnLines);
+}
+
+export function part1Debug(lines) {
+  const energisedTiles = {};
+  const energisedTilesWithDir = {};
+  let beams = [{coord: [0,0], dir: 'right', alive: true}];
+
+  function step () {
+    beams = beams.filter(b => b.alive);
+    // debugger;
+    // draw(lines, beams);
+
+    for (let i = 0; i < beams.length;i++) {
+      const beam = beams[i];
+      const beamCoordKey = `x-${beam.coord[0]}y-${beam.coord[1]}`;
+      const beamCoordDirKey = `${beamCoordKey}${beam.dir}`;
+      if (!energisedTiles[beamCoordKey]) {
+        energisedTiles[beamCoordKey] = true;
+        // result += 1;
+      }
+
+      if (energisedTilesWithDir[beamCoordDirKey]) {
+        beam.alive = false;
+        continue
+      } else {
+        energisedTilesWithDir[beamCoordDirKey] = true;
+      }
+      const tileCh = lines[beam.coord[1]][beam.coord[0]];
+      const d = beam.dir;
+      if (tileCh == '/') {
+        if (d == 'right') {
+          beam.dir = 'up';
+        } else if (d == 'up') {
+          beam.dir = 'right';
+        } else if (d == 'left') {
+          beam.dir = 'down';
+        } else {
+          beam.dir = 'left';
+        }
+      } else if (tileCh == '\\') {
+        if (d == 'right') {
+          beam.dir = 'down';
+        } else if (d == 'up') {
+          beam.dir = 'left';
+        } else if (d == 'down') {
+          beam.dir = 'right';
+        } else {
+          beam.dir = 'up';
+        }
+      } else if (tileCh == '|') {
+        if (d == 'right' || d == 'left') {
+          beam.dir = 'up';
+          const newBeam = {coord: [...beam.coord], dir: 'down', alive: true};
+          beams.push(newBeam);
+        } 
+      } else if (tileCh == '-') {
+        if (d == 'up' || d == 'down') {
+          beam.dir = 'left';
+          const newBeam = {coord: [...beam.coord], dir: 'right', alive: true};
+          beams.push(newBeam);
+        }
+      }
+      moveBeamInDirection(beam, lines);
+    }
+    return {energisedTiles, energisedTilesWithDir, beams};
+
+  }
+  return { step, beams };
 }
  
 export function part1(lines, debug = false) {
@@ -42,7 +113,7 @@ export function part1(lines, debug = false) {
 
     for (let i = 0; i < beams.length;i++) {
       const beam = beams[i];
-      const beamCoordKey = `${beam.coord[0]}${beam.coord[1]}`;
+      const beamCoordKey = `x-${beam.coord[0]}y-${beam.coord[1]}`;
       const beamCoordDirKey = `${beamCoordKey}${beam.dir}`;
       if (!energisedTiles[beamCoordKey]) {
         energisedTiles[beamCoordKey] = true;

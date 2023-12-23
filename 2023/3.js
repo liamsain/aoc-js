@@ -1,4 +1,4 @@
-import { getAdventOfCodeData } from '../utils.js';
+import { getAdventOfCodeData } from '../node-utils.js';
 
 const isNumber = v => !isNaN(v);
 const t = process.hrtime();

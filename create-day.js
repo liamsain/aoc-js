@@ -46,7 +46,7 @@ function createDayFile(year, day) {
   // create a js file for the day in the year folder if the day file does not exist
   const dayPath = path.join(yearPath, `/${day}.js`);
   if (!fs.existsSync(dayPath)) {
-    const dayTemplate = `import { getAdventOfCodeData } from '../utils.js';
+    const dayTemplate = `import { getAdventOfCodeData } from '../node-utils.js';
 const input = await getAdventOfCodeData(${year}, ${day});
 const start = performance.now();
 
