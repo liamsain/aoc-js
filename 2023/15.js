@@ -14,6 +14,16 @@ function calcHashOfString(str) {
   return result;
 }
 const firstResult = entries.reduce((acc, cur) => acc + calcHashOfString(cur), 0);
+const boxes = new Array(255).fill({lenses: []});
+entries.forEach((e) => {
+  if (e.includes('-')) {
+    const label = e.split('-')[0];
+    const boxNumber = calcHashOfString(label);
+  } else {
+    const label= e.split('=')[0];
+    const boxNumber = calcHashOfString(label);
+  }
+});
 
 
 const end = performance.now();
