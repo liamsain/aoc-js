@@ -1,5 +1,3 @@
-// const path = require('path');
-// import path from 'path';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -10,10 +8,8 @@ config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export async function getAdventOfCodeData(year, day) {
-  // check the file system using fs to see whether that file exists:
   const yearPath = path.join(__dirname, year.toString());
   const inputFilePath = `${yearPath}/${year}-${day}-input.txt`;
-  // use fs to read file path:
   if (fs.existsSync(inputFilePath)) {
     const data = fs.readFileSync(inputFilePath, 'utf8');
     return data.trim();

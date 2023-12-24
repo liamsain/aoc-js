@@ -1,6 +1,6 @@
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { getAdventOfCodeData } from './utils.js';
+import { getAdventOfCodeData } from './node-utils.js';
 import fs from 'fs';
 // args: 
 // -y year
