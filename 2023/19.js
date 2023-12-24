@@ -72,6 +72,7 @@ function getPartRating(part) {
   return result;
 }
 const part1 = parts.split('\n').reduce((acc, val) => acc + getPartRating(val),0)
+const part2parts = [];
 
 
 const end = performance.now();

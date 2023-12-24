@@ -48,6 +48,19 @@ export class NodeMap {
     }
     return null;
   }
+  getNodeByChar(ch) {
+    let node;
+    mainLoop: for(const row of this.rows) {
+      for (const n of row) {
+        if (n.ch == ch) {
+          node = n; 
+          break mainLoop;
+        }
+      }
+    }
+    return node;
+
+  }
   getNodesAround(x, y) {
     let result = [];
     const left = this.getNode(x - 1, y);
