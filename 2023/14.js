@@ -1,18 +1,18 @@
-import { getAdventOfCodeData, NodeMap } from '../node-utils.js';
-// const input = await getAdventOfCodeData(2023, 14);
+import { getAdventOfCodeData } from '../node-utils.js';
+const input = await getAdventOfCodeData(2023, 14);
 let firstResult = 0;
 let secondResult = 0;
-const input =
-  `O....#....
-O.OO#....#
-.....##...
-OO.#O....O
-.O.....O#.
-O.#..O.#.#
-..O..#O..O
-.......O..
-#....###..
-#OO..#....`;
+// const input =
+//   `O....#....
+// O.OO#....#
+// .....##...
+// OO.#O....O
+// .O.....O#.
+// O.#..O.#.#
+// ..O..#O..O
+// .......O..
+// #....###..
+// #OO..#....`;
 const start = performance.now();
 
 let lines = input.split('\n').map(l => l.split(''));
@@ -71,8 +71,8 @@ const states = [lines.map(x => x.join('')).reduce((acc, val) => acc + val, '')];
 
 let maxCycles = Infinity;
 let foundMax = false;
-let currentCycle = 0;
-while (currentCycle < maxCycles) {
+let currentCycle = 1;
+while (currentCycle <= maxCycles) {
   tiltItLikeItsHot('north');
   tiltItLikeItsHot('west');
   tiltItLikeItsHot('south');
@@ -82,16 +82,13 @@ while (currentCycle < maxCycles) {
     if (states.includes(str)) {
       foundMax = true;
       console.log('found a match on cycle', currentCycle)
-      debugger;
-      maxCycles = (currentCycle + 1)  * 100;
+      maxCycles = currentCycle + (1_000_000 % currentCycle);
+      console.log('setting max to ', maxCycles);
     }
 
     states.push(str);
   }
   currentCycle += 1;
-  if (currentCycle % 100 == 0) {
-    console.log(`${currentCycle}/${maxCycles}`);
-  }
 
 }
 
@@ -99,5 +96,5 @@ secondResult = getNorthSupportBeamLoad();
 
 const end = performance.now();
 console.log('first:', firstResult);
-console.log('second:', secondResult); // 93103 is too high // 93087 too low
+console.log('second:', secondResult); // 93103 is too high // 93091 too low
 console.log('time taken', end - start, 'ms');
