@@ -14,13 +14,38 @@
     </div>
   <script src="./grid.js" type="module"></script>
   <script type="module">
-    import { createHtmlGrid } from './grid.js';
-    createHtmlGrid({
-      divId: 'show',
-      width: 30,
-      height: 8,
-      onCellClick: (x, y) => console.log(x, y)
-    });
+    import { NodeMap } from './utils.js';
+    const lines =`0#00000#000##00#0000
+0##00#0#000#####E#00
+#S##0#0#0#0#0#####0#
+#0000#000#000000000#`.split('\n');
+    const nodeMap =new NodeMap({divId: 'show', lines})
+    nodeMap.drawHtml();
+    const startNode = nodeMap.getNodeByChar('S');
+    const endNode = nodeMap.getNodeByChar('E');
+    startNode.distance = 0;
+    const q = [startNode];
+    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
+    while (q.length) {
+      let currentNode = q.shift();
+      if (currentNode.ch === 'E') {
+        console.log('found end node', currentNode);
+        break;
+      }
+      const neighbours = nodeMap.getNodesAround(currentNode.x, currentNode.y).filter(n => n.ch !== '#');
+      for (let n of neighbours) {
+        if (n.distance === null || n.distance > currentNode.distance + 1) {
+          n.distance = currentNode.distance + 1;
+          if (n.ch !== 'E') {
+            n.ch = n.distance
+          }
+          q.push(n);
+        }
+      }
+      nodeMap.drawHtml();
+      await sleep(400);
+    }
   </script>
 </body>
 </html>

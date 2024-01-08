@@ -28,10 +28,11 @@ export function drawLines(lines, fn) {
 }
 
 export class NodeMap {
-  // arg: {lines: ['asdf', 'asdf']}
+  // arg: {lines: ['asdf', 'asdf'], divId: 'map'}
   constructor(arg) {
     // rows: [[{x: 0, y: 0, ch: 'a', distance: null}]]
     this.rows = [];
+    this.htmlDiv = arg.divId ? document.querySelector('#' + arg.divId) : null;
     arg.lines.forEach((line, lineIndex) => {
       const nodeRow = [];
       line.split('').forEach((ch, chIndex) => {
@@ -40,6 +41,53 @@ export class NodeMap {
       });
       this.rows.push(nodeRow);
     });
+  }
+
+  drawHtml() {
+    if (!this.htmlDiv) {
+      return;
+    }
+    this.htmlDiv.innerHTML = '';
+    let width = this.rows[0].length;
+    let height = this.rows.length;
+    for (let y = 0; y < height;y++) {
+      const rowDiv = document.createElement('div');
+      rowDiv.style.display = 'flex';
+      this.htmlDiv.appendChild(rowDiv);
+      for (let x = 0; x < width;x++) {
+        const cellDiv = document.createElement('div');
+        cellDiv.style.width = '40px';
+        cellDiv.style.height = '40px';
+        cellDiv.style.display = 'flex';
+        cellDiv.style.justifyContent = 'center';
+        cellDiv.style.alignItems = 'center';
+        cellDiv.style.borderRight = '1px solid black';
+        cellDiv.style.borderBottom = '1px solid black';
+        cellDiv.style.cursor = 'pointer';
+        cellDiv.innerHTML = this.rows[y][x].ch;
+        if (cellDiv.innerHTML == '#') {
+          cellDiv.style.background = 'black';
+        } else {
+          if (cellDiv.innerHTML != 0 && cellDiv.innerHTML != 'E') {
+            cellDiv.style.background = 'green';
+            cellDiv.style.color = 'white';
+          }
+        }
+          
+        if (x == 0) {
+          cellDiv.style.borderLeft = '1px solid black';
+        }
+        if (y == 0) {
+          cellDiv.style.borderTop = '1px solid black';
+        }
+        rowDiv.appendChild(cellDiv);
+        cellDiv.addEventListener('click', function() {
+          if(arg.onCellClick) {
+            arg.onCellClick(x, y);
+          }
+        });
+      }
+    }
   }
 
   getNode(x, y) {

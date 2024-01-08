@@ -4,16 +4,6 @@ export function createHtmlGrid(arg) {
   let width = arg.width || 10;
   let height = arg.height || 10;
   const containerDiv = document.querySelector('#' + arg.divId);
-  let blockedCellCount = arg.blockedCellCount || 0;
-  while(blockedCellCount > 0) {
-    const x = Math.floor(Math.random() * width);
-    const y = Math.floor(Math.random() * height);
-    const cellDiv = containerDiv.children[y].children[x];
-    if (!cellDiv.classList.contains('blocked')) {
-      cellDiv.classList.add('blocked');
-      blockedCellCount--;
-    }
-  }
 
   for (let y = 0; y < height;y++) {
     const rowDiv = document.createElement('div');
