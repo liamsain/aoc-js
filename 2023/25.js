@@ -1,21 +1,21 @@
 import { getAdventOfCodeData } from '../node-utils.js';
-// const input = await getAdventOfCodeData(2023, 25);
+const input = await getAdventOfCodeData(2023, 25);
 const start = performance.now();
 // const input = `a: b c d
 // b: e f`
-const input = `jqt: rhn xhk nvd
-rsh: frs pzl lsr
-xhk: hfx
-cmg: qnr nvd lhk bvb
-rhn: xhk bvb hfx
-bvb: xhk hfx
-pzl: lsr hfx nvd
-qnr: nvd
-ntq: jqt hfx bvb xhk
-nvd: lhk
-lsr: lhk
-rzs: qnr cmg lsr rsh
-frs: qnr lhk lsr`;
+// const input = `jqt: rhn xhk nvd
+// rsh: frs pzl lsr
+// xhk: hfx
+// cmg: qnr nvd lhk bvb
+// rhn: xhk bvb hfx
+// bvb: xhk hfx
+// pzl: lsr hfx nvd
+// qnr: nvd
+// ntq: jqt hfx bvb xhk
+// nvd: lhk
+// lsr: lhk
+// rzs: qnr cmg lsr rsh
+// frs: qnr lhk lsr`;
 const lines = input.split('\n');
 class GraphNode {
   constructor(label) {
@@ -42,7 +42,7 @@ class GraphNode {
     while(q.length > 0) {
       let current = q.shift();
       count += 1;
-      console.log(current.label);
+      // console.log(current.label);
       current.neighbours.forEach(n => {
         if (!n.visited) {
           q.push(n)
@@ -53,7 +53,7 @@ class GraphNode {
     console.log(count);
   }
 }
-class GraphNodes {
+class Graph {
   constructor(lines) {
     this.nodes = this.populateFromLines(lines);
   }
@@ -81,19 +81,31 @@ class GraphNodes {
     });
     return nodes;
   }
+  adjacencyList() {
+    this.nodes.forEach((n, i) => {
+      let str = `${i}\t${n.label}->`;
+      n.neighbours.forEach((neigh) => {
+        str += `${neigh.label}->`
+      })
+      console.log(str);
+    })
+  }
 }
 
-const graphNodes = new GraphNodes(lines);
-
-const hfx = graphNodes.getNode('hfx');
-hfx.removeNeighbour('pzl');
-const bvb = graphNodes.getNode('bvb');
-bvb.removeNeighbour('cmg');
-const nvd = graphNodes.getNode('nvd');
-nvd.removeNeighbour('jqt');
-nvd.bfs();
-bvb.bfs();
-hfx.bfs();
+const graph = new Graph(lines);
+graph.nodes[0].bfs();
+// const hfx = graph.getNode('hfx');
+// hfx.removeNeighbour('pzl');
+// graph.adjacencyList();
+// const bvb = graph.getNode('bvb');
+// bvb.removeNeighbour('cmg');
+// graph.adjacencyList();
+// const nvd = graph.getNode('nvd');
+// nvd.removeNeighbour('jqt');
+// graph.adjacencyList();
+// nvd.bfs();
+// bvb.bfs();
+// hfx.bfs();
 
 
 const end = performance.now();

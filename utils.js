@@ -62,32 +62,21 @@ export class NodeMap {
 
   }
   getNodesAround(x, y) {
-    let result = [];
-    const left = this.getNode(x - 1, y);
-    if (left) {
-      result.push(left);
-    }
-    const right = this.getNode(x + 1, y);
-    if (right) {
-      result.push(right);
-    }
-    const up = this.getNode(x, y - 1);
-    if (up) {
-      result.push(up);
-    }
-    const down = this.getNode(x, y + 1);
-    if (down) {
-      result.push(down);
-    }
-    return result;
+    return [
+      this.getNode(x - 1, y),
+      this.getNode(x + 1, y),
+      this.getNode(x, y - 1),
+      this.getNode(x, y + 1)
+    ].filter(x => x !== null);
   }
-  drawMap(currentNode) {
+
+  drawMap(drawFn) {
     let mapStr = '';
     this.rows.forEach(row => {
       let rowStr = ''
       row.forEach(n => {
-        if (currentNode && n.x == currentNode.x && n.y == currentNode.y) {
-          rowStr += 'C';
+        if (drawFn) {
+          rowStr += drawFn(n);
         } else {
           rowStr += n.ch;
         }
@@ -97,9 +86,6 @@ export class NodeMap {
     console.clear();
     console.log(mapStr);
   }
-  lineIncludesCh(rowNumber, ch) {
-    return this.rows[rowNumber].map(n => n.ch).includes(ch);
-  }
   stepsBetweenTwoCoords(src = [0, 0], target = [0, 0]) {
     let steps = 0;
     const srcNode = this.getNode(src[0], src[1]);
@@ -107,7 +93,7 @@ export class NodeMap {
     const q = [srcNode];
     let currentNode;
     while(q.length) {
-      currentNode = q.shift();
+      currentNode = q.pop();
       // this.drawMap(currentNode);
       // debugger;
       if (currentNode.x == target[0] && currentNode.y == target[1]) {
