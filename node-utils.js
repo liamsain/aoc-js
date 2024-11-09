@@ -27,6 +27,7 @@ export async function getAdventOfCodeData(year, day) {
   });
 
   if (!response.ok) {
+    console.log(response);
     throw new Error(`Failed to fetch data. Status code: ${response.status}`);
   }
 
