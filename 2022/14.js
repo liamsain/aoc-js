@@ -13,7 +13,6 @@ class Cave {
     }
   }
   draw(fromX = 0, toX, toY) {
-    debugger;
     if (!toX) {
       toX = this.grid[0].length;
     }
