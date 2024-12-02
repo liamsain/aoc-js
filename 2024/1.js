@@ -8,9 +8,9 @@ let distances = 0;
 let simScore = 0;
 
 input.split('\n').forEach(line => {
-  const lineSpl = line.split(' ');
+  const lineSpl = line.split('  ');
   const leftSide = Number(lineSpl[0]);
-  const rightSide = Number(lineSpl[lineSpl.length - 1]);
+  const rightSide = Number(lineSpl[1]);
   left.push(leftSide);
   right.push(rightSide);
 });
