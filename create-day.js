@@ -5,7 +5,7 @@ import fs from 'fs';
 // args: 
 // -y year
 // -d day
-// -today true/false
+// -today 
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 function parseArgs(args) {
@@ -17,8 +17,8 @@ function parseArgs(args) {
       parsedArgs.year = args[i + 1];
     } else if(arg === '-d' && args[i + 1] !== undefined) {
       parsedArgs.day = args[i + 1];
-    } else if(arg === '-today' && args[i + 1] !== undefined) {
-      parsedArgs.today = args[i + 1];
+    } else if(arg === '-today') {
+      parsedArgs.today = true
     }
   }
   return parsedArgs;
@@ -26,7 +26,7 @@ function parseArgs(args) {
 
 const args = process.argv.slice(2);
 const parsedArgs = parseArgs(args);
-if (parsedArgs.today === 'true') {
+if (parsedArgs.today) {
   const today = new Date();
   const year = today.getFullYear().toString();
   const day = today.getDate().toString();
@@ -57,6 +57,8 @@ console.log('time taken', end - start, 'ms');
     getAdventOfCodeData(year, day);
 
     fs.writeFileSync(dayPath, dayTemplate);
+  } else {
+    console.log('That file already exists: ', dayPath);
   }
 }
 
