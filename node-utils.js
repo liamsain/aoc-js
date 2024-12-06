@@ -14,7 +14,7 @@ export async function getAdventOfCodeData(year, day) {
     const data = fs.readFileSync(inputFilePath, 'utf8');
     return data.trim();
   } else {
-    console.log(`Input file for ${year} day ${day} does not exist. Fetching from Advent of Code...`);
+    console.log(`Fetching ${year} day ${day} from Advent of Code...`);
   }
 
   const url = `https://adventofcode.com/${year}/day/${day}/input`;
