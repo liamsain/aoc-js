@@ -12,7 +12,6 @@ for (let i = 0; i < input.length; i++) {
   let ch = input[i];
   switch (ch) {
     case 'm':
-      debugger;
       if (input[i + 1] === 'u' && input[i + 2] === 'l' && input[i + 3] === '(') {
         i += 4;
         let firstNum = '';
@@ -45,9 +44,10 @@ for (let i = 0; i < input.length; i++) {
           }
         }
         if (firstSectionIsNum && secondSectionIsNum) {
-          part1 += (firstNum * secondNum);
+          const mulled = (firstNum * secondNum);
+          part1 += mulled;
           if (shouldMul) {
-            part2 += (firstNum * secondNum);
+            part2 += mulled;
           }
         }
       }
