@@ -20,9 +20,8 @@ const lineLength = grid[0].length;
 let y = grid.findIndex(l => l.includes('^'));
 let x = grid[y].findIndex(ch => ch == '^');
 visited.push([x, y]);
+const gridMap = new Map(); // key: '10 20', value: '^';
 // assume that if x, y and dir are same again then he's stuck
-// [ { x: 0, y: 0, dir: '^' }  
-// x1 y22
 
 
 let hesFallenOff = false;
@@ -37,9 +36,13 @@ while (!hesFallenOff) {
         grid[y][x] = '>';
       } else {
         grid[y][x] = 'X';
-        if (visited.findIndex(i => i[0] == x && i[1] == y -1) == -1) {
-          visited.push([x, y-1]);
+        const k = `${x} ${y-1}`;
+        if (!gridMap.has(k)) {
+          gridMap.set(k, '^');
         }
+        // if (visited.findIndex(i => i[0] == x && i[1] == y -1) == -1) {
+        //   visited.push([x, y-1]);
+        // }
         grid[y - 1][x] = '^';
         y -= 1;
       }
@@ -92,6 +95,7 @@ while (!hesFallenOff) {
     }
   }
 }
+
 
 const end = performance.now();
 console.log('part 1: ', visited.length);
