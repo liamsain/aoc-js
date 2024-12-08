@@ -1,5 +1,5 @@
 import { getAdventOfCodeData } from '../node-utils.js';
-import { simulateGuardSteps } from './helpers.js';
+import { simGuardStepsV2 } from './helpers.js';
 import { Worker } from 'node:worker_threads';
 import os from 'os';
 
@@ -15,42 +15,54 @@ const input = await getAdventOfCodeData(2024, 6);
 // ........#.
 // #.........
 // ......#...`;
+
+
 const start = performance.now();
 
+let lineLength = 0;
+while (true) {
+  if (input[lineLength] == '\n') {
+    break;
+  }
+  lineLength++;
+}
+
+// given x and y: return int8[(y * lineLength) + x]
+// get y: Math.floor(i / lineLength)
+// get x: i % lineLength
+const inputLength = input.length;
+const sharedBuffer = new SharedArrayBuffer(inputLength);
+const buff = new Uint8Array(sharedBuffer);
+let initialSqIndex = 0
+let lastY = 0;
+for (let i = 0; i < inputLength; i++) {
+  const ch = input[i];
+  if (ch == '#') {
+    buff[i - lastY] = 1;
+  } else if (ch == '^') {
+    initialSqIndex = i - lastY;
+  } else if (ch == '\n') {
+    lastY++;
+  }
+}
 
 let part2 = 0;
-let grid = [];
 let visited = [];
-// let curI = 0;
-// while (true) {
-//   if (input[curI] == '\n') {
-//     console.log(curI);
-//     break;
-//   }
-//   curI++;
-  
-// }
-input.split('\n').forEach(l => { 
-  grid.push(l.split(''));
-  
-});
-let y = grid.findIndex(l => l.includes('^'));
-let x = grid[y].findIndex(ch => ch == '^');
-visited.push([x, y]);
-const res = simulateGuardSteps(grid, true, x, y);
+// const x = initialSqIndex % lineLength;
+// const y = Math.floor(initialSqIndex / lineLength);
+const res = simGuardStepsV2(buff, true, initialSqIndex, lineLength, lastY);
 
 
 visited = res.visited;
-visited.unshift([x, y]);
-const part1 = visited.length;
+const part1 = visited.length + 1; // + 1 to account for initial cell
 
-const numWorkers = os.cpus().length;
+const numWorkers = os.cpus().length 
 const chunkSize = Math.ceil(visited.length / numWorkers);
 let completedWorkers = 0;
 for (let i = 0; i < numWorkers; i++) {
   const visitedChunk = visited.slice(i * chunkSize, (i + 1) * chunkSize);
   const worker = new Worker('./2024/6-worker.js');
-  worker.postMessage({ grid, visited: visitedChunk, x, y });
+  worker.postMessage({ sharedBuffer, visited: visitedChunk, startIndex: initialSqIndex, lineLength, lastY });
   worker.on('message', res => {
     completedWorkers++;
     part2 += res;
@@ -63,6 +75,5 @@ for (let i = 0; i < numWorkers; i++) {
     }
   });
 }
-
 
 

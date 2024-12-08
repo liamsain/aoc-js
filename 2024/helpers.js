@@ -1,73 +1,92 @@
-export function simulateGuardSteps(grid, updateVisited = true, startX, startY) {
-  let curX = startX;
-  let curY = startY;
+export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLength, lastY, extraObstacleIndex) {
   let hesFallenOff = false;
   let hesStuck = false;
-  // const visitedMap = {}; // key: 'x y': value: true
   const visited = [];
+  let currentIndex = startIndex;
 
-  const lineLength = grid[0].length;
   const gridMap = {}; // key: '10 20 ^', value: true
   // assume that if x, y and dir are same again then he's stuck
 
-
-  const modifyCoordAndDoStuckCheck = (newX, newY, dir) => {
-    curX = newX;
-    curY = newY;
-    const k = `${curX} ${curY} ${dir}`;
+  let ch = '^';
+  const isStuck = () => {
+    const k = `${currentIndex} ${ch}`;
     if (gridMap[k]) {
       return true; // hes stuck!
     } else {
       gridMap[k] = true;
     }
     if (updateVisited) {
-      if (visited.findIndex(i => i[0] == curX && i[1] == curY) == -1) {
-        visited.push([curX, curY]);
+      if (!visited.includes(currentIndex)) {
+        visited.push(currentIndex);
       }
     }
 
   }
-  let ch = '^';
+  // const draw = () => {
+  //   let strs = '';
+  //   for (let y = 0; y < lastY;y++) {
+  //     let str = '';
+  //     for (let x = 0; x < lineLength;x++) {
+  //       const ind = (y * lineLength) + x;
+  //       if (ind == currentIndex) {
+  //         str += ch;
+  //       } else {
+  //         if (buff[ind] == 0) {
+  //           str += '.'
+  //         } else {
+  //           str += '#';
+  //         }
+  //       }
+  //     }
+  //     strs += str;
+  //     strs += '\n';
+  //   }
+  //   console.log(strs);
+  // }
 
   while (!hesFallenOff && !hesStuck) {
     if (ch == '^') {
-      if (curY == 0) {
+      if (currentIndex < lineLength) {
         hesFallenOff = true;
       } else {
-        if (grid[curY - 1][curX] == '#') {
+        if (buff[currentIndex - lineLength] == 1 || ((currentIndex - lineLength) == extraObstacleIndex)) {
           ch = '>';
         } else {
-          hesStuck = modifyCoordAndDoStuckCheck(curX, curY - 1, '^');
+          currentIndex -= lineLength;
+          hesStuck = isStuck();
         }
       }
     } else if (ch == '>') {
-      if (curX == lineLength - 1) {
+      if ((currentIndex + 1) % lineLength == 0) {
         hesFallenOff = true;
       } else {
-        if (grid[curY][curX + 1] == '#') {
+        if (buff[currentIndex + 1] == 1 || ((currentIndex + 1) == extraObstacleIndex)) {
           ch = 'v';
         } else {
-          hesStuck = modifyCoordAndDoStuckCheck(curX + 1, curY, '>');
+          currentIndex += 1
+          hesStuck = isStuck();
         }
       }
     } else if (ch == 'v') {
-      if (curY == grid.length - 1) {
+      if (currentIndex > (lineLength * lastY)) {
         hesFallenOff = true;
       } else {
-        if (grid[curY + 1][curX] == '#') {
+        if (buff[currentIndex + lineLength] == 1 || ((currentIndex + lineLength) == extraObstacleIndex)) {
           ch = '<'
         } else {
-          hesStuck = modifyCoordAndDoStuckCheck(curX, curY + 1, 'v');
+          currentIndex += lineLength;
+          hesStuck = isStuck();
         }
       }
     } else {
-      if (curX == 0) {
+      if (currentIndex % lineLength == 0) {
         hesFallenOff = true;
       } else {
-        if (grid[curY][curX - 1] == '#') {
+        if (buff[currentIndex - 1] == 1 || ((currentIndex - 1) == extraObstacleIndex)) {
           ch = '^';
         } else {
-          hesStuck = modifyCoordAndDoStuckCheck(curX - 1, curY, '<');
+          currentIndex--;
+          hesStuck = isStuck();
         }
       }
     }
@@ -78,4 +97,6 @@ export function simulateGuardSteps(grid, updateVisited = true, startX, startY) {
     hesStuck,
     visited,
   }
+
 }
+
