@@ -1,10 +1,11 @@
-export function simulateGuardSteps(initialGrid, visited = [], updateVisited = true, startX, startY) {
+export function simulateGuardSteps(grid, visited = [], updateVisited = true, startX, startY) {
   let curX = startX;
   let curY = startY;
   let hesFallenOff = false;
   let hesStuck = false;
-  const localVis = structuredClone(visited);
-  const grid = structuredClone(initialGrid);
+  // const localVis = structuredClone(visited);
+  // const grid = structuredClone(initialGrid);
+
   const lineLength = grid[0].length;
   const gridMap = {}; // key: '10 20 ^', value: true
   // assume that if x, y and dir are same again then he's stuck
@@ -19,8 +20,8 @@ export function simulateGuardSteps(initialGrid, visited = [], updateVisited = tr
       gridMap[k] = true;
     }
     if (updateVisited) {
-      if (localVis.findIndex(i => i[0] == curX && i[1] == curY) == -1) {
-        localVis.push([curX, curY]);
+      if (visited.findIndex(i => i[0] == curX && i[1] == curY) == -1) {
+        visited.push([curX, curY]);
       }
     }
 
@@ -74,6 +75,6 @@ export function simulateGuardSteps(initialGrid, visited = [], updateVisited = tr
   return {
     hesFallenOff,
     hesStuck,
-    localVis,
+    visited,
   }
 }

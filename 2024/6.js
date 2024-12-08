@@ -20,17 +20,20 @@ const start = performance.now();
 let part2 = 0;
 let grid = [];
 let visited = [];
-input.split('\n').forEach(l => grid.push(l.split('')));
+input.split('\n').forEach(l => { 
+  grid.push(l.split(''));
+  
+});
 let y = grid.findIndex(l => l.includes('^'));
 let x = grid[y].findIndex(ch => ch == '^');
 visited.push([x, y]);
 const res = simulateGuardSteps(grid, visited, true, x, y);
 
 
-const part1 = res.localVis.length;
-visited = res.localVis.slice(1, res.localVis.length);
+const part1 = res.visited.length;
+visited = res.visited.slice(1, res.visited.length);
 
-const numWorkers = os.cpus().length - 1;
+const numWorkers = os.cpus().length * 2;
 const chunkSize = Math.ceil(visited.length / numWorkers);
 let completedWorkers = 0;
 for (let i = 0; i < numWorkers; i++) {
