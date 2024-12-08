@@ -45,11 +45,13 @@ export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLeng
   // }
 
   while (!hesFallenOff && !hesStuck) {
+    let testInd = 0;
     if (ch == '^') {
       if (currentIndex < lineLength) {
         hesFallenOff = true;
       } else {
-        if (buff[currentIndex - lineLength] == 1 || ((currentIndex - lineLength) == extraObstacleIndex)) {
+        testInd = currentIndex - lineLength;
+        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
           ch = '>';
         } else {
           currentIndex -= lineLength;
@@ -60,7 +62,8 @@ export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLeng
       if ((currentIndex + 1) % lineLength == 0) {
         hesFallenOff = true;
       } else {
-        if (buff[currentIndex + 1] == 1 || ((currentIndex + 1) == extraObstacleIndex)) {
+        testInd = currentIndex + 1;
+        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
           ch = 'v';
         } else {
           currentIndex += 1
@@ -71,7 +74,8 @@ export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLeng
       if (currentIndex > (lineLength * lastY)) {
         hesFallenOff = true;
       } else {
-        if (buff[currentIndex + lineLength] == 1 || ((currentIndex + lineLength) == extraObstacleIndex)) {
+        testInd = currentIndex + lineLength;
+        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
           ch = '<'
         } else {
           currentIndex += lineLength;
@@ -82,7 +86,8 @@ export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLeng
       if (currentIndex % lineLength == 0) {
         hesFallenOff = true;
       } else {
-        if (buff[currentIndex - 1] == 1 || ((currentIndex - 1) == extraObstacleIndex)) {
+        testInd = currentIndex - 1;
+        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
           ch = '^';
         } else {
           currentIndex--;
