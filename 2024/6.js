@@ -40,11 +40,11 @@ visited.push([x, y]);
 const res = simulateGuardSteps(grid, true, x, y);
 
 
-// visited = res.visited.slice(1, res.visited.length);
-visited = [...visited,...res.visited];
+visited = res.visited;
+visited.unshift([x, y]);
 const part1 = visited.length;
 
-const numWorkers = os.cpus().length * 2;
+const numWorkers = os.cpus().length;
 const chunkSize = Math.ceil(visited.length / numWorkers);
 let completedWorkers = 0;
 for (let i = 0; i < numWorkers; i++) {
