@@ -1,8 +1,9 @@
 import { getAdventOfCodeData } from '../node-utils.js';
 import { simulateGuardSteps } from './helpers.js';
 import { Worker } from 'node:worker_threads';
-const input = await getAdventOfCodeData(2024, 6);
 import os from 'os';
+
+const input = await getAdventOfCodeData(2024, 6);
 
 // const input = `....#.....
 // .........#

@@ -3,8 +3,6 @@ export function simulateGuardSteps(grid, visited = [], updateVisited = true, sta
   let curY = startY;
   let hesFallenOff = false;
   let hesStuck = false;
-  // const localVis = structuredClone(visited);
-  // const grid = structuredClone(initialGrid);
 
   const lineLength = grid[0].length;
   const gridMap = {}; // key: '10 20 ^', value: true
