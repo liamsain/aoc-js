@@ -1,12 +1,15 @@
-export function simulateGuardSteps(grid, visited = [], updateVisited = true, startX, startY) {
+export function simulateGuardSteps(grid, updateVisited = true, startX, startY) {
   let curX = startX;
   let curY = startY;
   let hesFallenOff = false;
   let hesStuck = false;
+  // const visitedMap = {}; // key: 'x y': value: true
+  const visited = [];
 
   const lineLength = grid[0].length;
   const gridMap = {}; // key: '10 20 ^', value: true
   // assume that if x, y and dir are same again then he's stuck
+
 
   const modifyCoordAndDoStuckCheck = (newX, newY, dir) => {
     curX = newX;

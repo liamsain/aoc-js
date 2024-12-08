@@ -12,7 +12,7 @@ parentPort.on('message', (data) => {
     }
       data.grid[curr[1]][curr[0]] = '#';
       prevVisited = [curr[0], curr[1]];
-      const localRes = simulateGuardSteps(data.grid, data.visited, false, data.x, data.y);
+      const localRes = simulateGuardSteps(data.grid, false, data.x, data.y);
       if (localRes.hesStuck) {
         res += 1;
       }
