@@ -21,7 +21,7 @@ const start = performance.now();
 
 let lineLength = 0;
 while (true) {
-  if (input[lineLength] == '\n') {
+  if (input[lineLength] === '\n') {
     break;
   }
   lineLength++;
@@ -37,11 +37,11 @@ let initialSqIndex = 0
 let lastY = 0;
 for (let i = 0; i < inputLength; i++) {
   const ch = input[i];
-  if (ch == '#') {
+  if (ch === '#') {
     buff[i - lastY] = 1;
-  } else if (ch == '^') {
+  } else if (ch === '^') {
     initialSqIndex = i - lastY;
-  } else if (ch == '\n') {
+  } else if (ch === '\n') {
     lastY++;
   }
 }
@@ -67,7 +67,7 @@ for (let i = 0; i < numWorkers; i++) {
     completedWorkers++;
     part2 += res;
     worker.terminate();
-    if (completedWorkers == numWorkers) {
+    if (completedWorkers === numWorkers) {
       const end = performance.now();
       console.log('part 1: ', part1);
       console.log('part 2: ', part2);

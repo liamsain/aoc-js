@@ -46,36 +46,36 @@ export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLeng
 
   while (!hesFallenOff && !hesStuck) {
     let testInd = 0;
-    if (ch == '^') {
+    if (ch === '^') {
       if (currentIndex < lineLength) {
         hesFallenOff = true;
       } else {
         testInd = currentIndex - lineLength;
-        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
+        if (buff[testInd] === 1 || (testInd === extraObstacleIndex)) {
           ch = '>';
         } else {
           currentIndex -= lineLength;
           hesStuck = isStuck();
         }
       }
-    } else if (ch == '>') {
-      if ((currentIndex + 1) % lineLength == 0) {
+    } else if (ch === '>') {
+      if ((currentIndex + 1) % lineLength === 0) {
         hesFallenOff = true;
       } else {
         testInd = currentIndex + 1;
-        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
+        if (buff[testInd] === 1 || (testInd === extraObstacleIndex)) {
           ch = 'v';
         } else {
           currentIndex += 1
           hesStuck = isStuck();
         }
       }
-    } else if (ch == 'v') {
+    } else if (ch === 'v') {
       if (currentIndex > (lineLength * lastY)) {
         hesFallenOff = true;
       } else {
         testInd = currentIndex + lineLength;
-        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
+        if (buff[testInd] === 1 || (testInd === extraObstacleIndex)) {
           ch = '<'
         } else {
           currentIndex += lineLength;
@@ -83,11 +83,11 @@ export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLeng
         }
       }
     } else {
-      if (currentIndex % lineLength == 0) {
+      if (currentIndex % lineLength === 0) {
         hesFallenOff = true;
       } else {
         testInd = currentIndex - 1;
-        if (buff[testInd] == 1 || (testInd == extraObstacleIndex)) {
+        if (buff[testInd] === 1 || (testInd === extraObstacleIndex)) {
           ch = '^';
         } else {
           currentIndex--;
