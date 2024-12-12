@@ -55,9 +55,11 @@ for (let i = 0; i < input.length; i++) {
     case 'd':
       if (input[i + 1] === 'o') {
         if (input[i + 2] === '(' && input[i + 3] === ')') {
+          i+= 3;
           shouldMul = true;
         } else if (input[i + 2] === 'n' && input[i + 3] === '\'' && input[i + 4] === 't' && input[i + 5] === '(' && input[i + 6] === ')') {
           shouldMul = false;
+          i+=6;
         }
       }
       break;

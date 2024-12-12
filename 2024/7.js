@@ -11,27 +11,35 @@ const input = await getAdventOfCodeData(2024, 7);
 // 292: 11 6 16 20`
 const start = performance.now();
 let part1 = 0;
+const opComboMap = {};
 
-function getOperandCombos(len = 3) {
+export function getOperatorCombos(len = 3) {
+  if (opComboMap[len]) {
+    return opComboMap[len];
+  }
   let res = [];
   let pos = 0;
   let amount = 0;
+  const opMap = {};
   const invertArr = arr => {
     let res = new Array(arr.length).fill('');
     for (let i = 0; i < arr.length; i++) {
       res[i] = arr[i] == '*' ? '+' : '*';
     }
-    return res;
+    return res.join('');;
   }
-  while (amount < Math.ceil((len + 1) / 2)) {
+  while (amount < len) {
     let arr = Array(len).fill('*');
     let tmpAmount = 0;
     while (tmpAmount < amount) {
       arr[pos + tmpAmount] = '+';
       tmpAmount++;
     }
-    res.push(arr);
-    res.push(invertArr(arr))
+    const str = arr.join('');
+    if (!opMap[str]) {
+      res.push(str);
+      opMap[str] = true;
+    }
     if (amount == 0) {
       amount++;
       continue;
@@ -43,37 +51,55 @@ function getOperandCombos(len = 3) {
       pos++;
     }
   }
+  const inverts = [];
+  for (const x of res) {
+    const inverted = invertArr(x);
+    if (!opMap[inverted]) {
+      inverts.push(invertArr(x))
+      opMap[inverted] = true
+    }
+  }
+  res.push(...inverts);
+  opComboMap[len] = res;
+
   return res;
 }
 
-input.split('\n').forEach((line, lineIndex) => {
-  const [testValStr, ...numsStr] = line.split(': ');
-  const testVal = Number(testValStr);
-  const nums = numsStr[0].split(' ').map(x => Number(x));
-
-  const operandCombos = getOperandCombos(nums.length - 1);
-  let testValFound = false;
-  for (let i = 0; i < operandCombos.length; i++) {
+export function atLeastOneEquationMakesTestVal(nums, testVal) {
+  const operatorCombos = getOperatorCombos(nums.length - 1);
+  let equationsAreTrue = false;
+  for (let i = 0; i < operatorCombos.length; i++) {
     let res = nums[0];
     for (let numi = 1; numi < nums.length; numi++) {
-      if (operandCombos[i][numi - 1] == '+') {
+      if (operatorCombos[i][numi - 1] == '+') {
         res += nums[numi]
       } else {
         res *= nums[numi]
       }
     }
-    // console.log(`nums: ${nums}, operands: ${operandCombos[i]}, result: ${res}`);
 
     if (res == testVal) {
-      part1 += testVal;
-      testValFound = true;
+      equationsAreTrue = true;
       break;
     }
   }
+  return equationsAreTrue;
+
+}
+
+input.split('\n').forEach((line, lineIndex) => {
+  const splitLn = line.split(': ');
+  const testVal = Number(splitLn[0]);
+  const nums = splitLn[1].split(' ').map(x => Number(x));
+  // console.log(lineIndex + 1, ':', testVal, ':', nums)
+  if (atLeastOneEquationMakesTestVal(nums, testVal)) {
+    part1 += testVal;
+  }
+
 });
 
 
-// 84758389664 too low
+// 162824468978 too low
 
 const end = performance.now();
 console.log('part 1: ', part1);
