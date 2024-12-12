@@ -1,35 +1,20 @@
-import { getAdventOfCodeData } from '../node-utils.js';
-const input = await getAdventOfCodeData(2024, 7);
-import { Worker } from 'node:worker_threads';
-import os from 'os';
-// const input = `190: 10 19
-// 3267: 81 40 27
-// 83: 17 5
-// 156: 15 6
-// 7290: 6 8 6 15
-// 161011: 16 10 13
-// 192: 17 8 14
-// 21037: 9 7 18 13
-// 292: 11 6 16 20`;
+import { parentPort } from 'node:worker_threads';
+parentPort.on('message', (data) => {
 
-const start = performance.now();
-let part1 = 0;
+  let res = 0;
+  for (let i = 0; i < data.lines.length; i++) {
+    const splitLn = data.lines[i].split(': ');
+    const testVal = Number(splitLn[0]);
 
-const opComboMap = {};
-
-input.split('\n').forEach((line, lineIndex) => {
-  const splitLn = line.split(': ');
-  const testVal = Number(splitLn[0]);
-
-  const nums = splitLn[1].split(' ').map(x => Number(x));
-  if (atLeastOneEquationMakesTestVal(nums, testVal)) {
-    part1 += testVal;
+    const nums = splitLn[1].split(' ').map(x => Number(x));
+    if (atLeastOneEquationMakesTestVal(nums, testVal)) {
+      res += testVal;
+    }
   }
-});
-const end = performance.now();
-console.log('part 1: ', part1);
-console.log('time taken', end - start, 'ms');
 
+  parentPort.postMessage(res);
+});
+const opComboMap = {};
 
 export function getOperatorCombos(num) {
   if (opComboMap[num]) {
@@ -74,5 +59,3 @@ export function atLeastOneEquationMakesTestVal(nums, testVal) {
   }
   return equationsAreTrue;
 }
-
-
