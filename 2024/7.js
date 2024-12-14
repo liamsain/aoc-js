@@ -15,6 +15,7 @@ for (let i = 1; i < 13;i++) {
   getOperatorCombosFromColumnNumber(i, 3);
 }
 
+
 input.split('\n').forEach((line, lineIndex) => {
   const splitLn = line.split(': ');
   const testVal = Number(splitLn[0]);
@@ -26,16 +27,20 @@ input.split('\n').forEach((line, lineIndex) => {
     part2Candidates.push({ nums, testVal });
   }
 });
-const numWorkers = os.cpus().length - 1;
+
+const numWorkers = os.cpus().length;
 const chunkSize = Math.ceil(part2Candidates.length / numWorkers);
 let completedWorkers = 0;
 for (let i = 0; i < numWorkers; i++) {
   const chunk = part2Candidates.slice(i * chunkSize, (i + 1) * chunkSize);
+
+  // const workStart = performance.now();
   const worker = new Worker('./2024/7-worker.js');
   worker.postMessage({ candidates: chunk, comboMap: opComboMap });
   worker.on('message', res => {
+    // const workEnd = performance.now();
+    // console.log(`worker ${i}, with ${chunk.length} items,  time: ${workEnd - workStart}ms`);
 
-    debugger;
     completedWorkers++;
     part2 += res;
     worker.terminate();

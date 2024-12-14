@@ -1,4 +1,3 @@
-import { simGuardStepsV2 } from './helpers.js';
 import { parentPort } from 'node:worker_threads';
 
 parentPort.on('message', (data) => {
@@ -43,7 +42,7 @@ function part2Fn(nums, testVal, comboMap) {
         res3 *= nums[numi];
       }
     }
-    if (res == testVal || res2 == testVal || res3 == testVal) {
+    if (res === testVal || res2 === testVal || res3 === testVal) {
       result = true;
       break;
     }
