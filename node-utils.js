@@ -27,8 +27,13 @@ export async function getAdventOfCodeData(year, day) {
   });
 
   if (!response.ok) {
-    console.log(response);
-    throw new Error(`Failed to fetch data. Status code: ${response.status}`);
+    if (response.status == 400) {
+      console.log('400 error. You probably need to update your session_id');
+      return;
+    } else {
+      console.log(response);
+      throw new Error(`Failed to fetch data. Status code: ${response.status}`);
+    }
   }
 
   const data = await response.text();
