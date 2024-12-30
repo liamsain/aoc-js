@@ -22,27 +22,6 @@ export function simGuardStepsV2(buff, updateVisited = true, startIndex, lineLeng
     }
 
   }
-  // const draw = () => {
-  //   let strs = '';
-  //   for (let y = 0; y < lastY;y++) {
-  //     let str = '';
-  //     for (let x = 0; x < lineLength;x++) {
-  //       const ind = (y * lineLength) + x;
-  //       if (ind == currentIndex) {
-  //         str += ch;
-  //       } else {
-  //         if (buff[ind] == 0) {
-  //           str += '.'
-  //         } else {
-  //           str += '#';
-  //         }
-  //       }
-  //     }
-  //     strs += str;
-  //     strs += '\n';
-  //   }
-  //   console.log(strs);
-  // }
 
   while (!hesFallenOff && !hesStuck) {
     let testInd = 0;

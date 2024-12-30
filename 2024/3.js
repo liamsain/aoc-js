@@ -73,4 +73,4 @@ for (let i = 0; i < input.length; i++) {
 const end = performance.now();
 console.log('part 1:', part1);
 console.log('part 2:', part2);
-console.log('time taken', end - start, 'ms');
+console.log('time taken', Math.ceil(end - start), 'ms');

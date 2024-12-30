@@ -60,12 +60,10 @@ grid.generateFreqMap({ charsToExclude: ['.'] });
 
 const foundAntinodes = [];
 const extraAntinodes = [];
-let part1 = 0;
 for (const prop in grid.freqMap) {
   const coords = grid.freqMap[prop];
   for (let i = 0; i < coords.length; i++) {
     for (let ii = coords.length - 1; ii > i; ii--) {
-      debugger;
       if (i == ii) {
         continue;
       }
@@ -147,4 +145,4 @@ for (const prop in grid.freqMap) {
 const end = performance.now();
 console.log('part1: ', foundAntinodes.length);
 console.log('part2: ', extraAntinodes.length);
-console.log('time taken', end - start, 'ms');
+console.log('time taken', Math.ceil(end - start), 'ms');

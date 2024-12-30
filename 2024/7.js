@@ -34,12 +34,9 @@ let completedWorkers = 0;
 for (let i = 0; i < numWorkers; i++) {
   const chunk = part2Candidates.slice(i * chunkSize, (i + 1) * chunkSize);
 
-  // const workStart = performance.now();
   const worker = new Worker('./2024/7-worker.js');
   worker.postMessage({ candidates: chunk, comboMap: opComboMap });
   worker.on('message', res => {
-    // const workEnd = performance.now();
-    // console.log(`worker ${i}, with ${chunk.length} items,  time: ${workEnd - workStart}ms`);
 
     completedWorkers++;
     part2 += res;

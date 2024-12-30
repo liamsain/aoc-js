@@ -5,18 +5,6 @@ import os from 'os';
 
 const input = await getAdventOfCodeData(2024, 6);
 
-// const input = `....#.....
-// .........#
-// ..........
-// ..#.......
-// .......#..
-// ..........
-// .#..^.....
-// ........#.
-// #.........
-// ......#...`;
-
-
 const start = performance.now();
 
 let lineLength = 0;
@@ -27,9 +15,6 @@ while (true) {
   lineLength++;
 }
 
-// given x and y: return int8[(y * lineLength) + x]
-// get y: Math.floor(i / lineLength)
-// get x: i % lineLength
 const inputLength = input.length;
 const sharedBuffer = new SharedArrayBuffer(inputLength);
 const buff = new Uint8Array(sharedBuffer);
@@ -48,8 +33,6 @@ for (let i = 0; i < inputLength; i++) {
 
 let part2 = 0;
 let visited = [];
-// const x = initialSqIndex % lineLength;
-// const y = Math.floor(initialSqIndex / lineLength);
 const res = simGuardStepsV2(buff, true, initialSqIndex, lineLength, lastY);
 
 
@@ -71,7 +54,7 @@ for (let i = 0; i < numWorkers; i++) {
       const end = performance.now();
       console.log('part 1: ', part1);
       console.log('part 2: ', part2);
-      console.log('time taken', end - start, 'ms');
+      console.log('time taken', Math.ceil(end - start), 'ms');
     }
   });
 }

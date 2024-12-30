@@ -52,7 +52,8 @@ const start = performance.now();
 
 
 const end = performance.now();
-console.log('time taken', end - start, 'ms');
+const timeTaken = Math.round((end - start) * 1000) / 1000
+console.log('time taken', timeTaken, 'ms');
     `;
     getAdventOfCodeData(year, day);
 

@@ -20,9 +20,7 @@ for (let i = 0; i < 50; i++) {
   blink();
 }
 const end = performance.now();
-
-console.log(`Part 1: ${part1}\nPart 2: ${stoneMap.total}\nTime taken: ${end - start}ms`);
-
+console.log(`Part 1: ${part1}\nPart 2: ${stoneMap.total}\nTime taken: ${Math.ceil(end - start)}ms`);
 function blink() {
   const tmp = new NumberKVStore();
   for (let k in stoneMap.store) {

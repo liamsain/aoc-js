@@ -36,8 +36,6 @@ for (const zeroObj of zeroCoords) {
   const visitedNines = [];
   while (neighbours.length > 0) {
     const current = neighbours.pop();
-    // drawWithActiveHashes([], current.coord);
-    debugger;
     if (current.num === 9 && !visitedNines.find(vn => vn[0] == current.coord[0] && vn[1] == current.coord[1])) {
       visitedNines.push([current.coord[0], current.coord[1]]);
       zeroObj.score++;
@@ -59,28 +57,7 @@ for (const zeroObj of part2ZeroCoords) {
   }
 }
 
-function drawWithActiveHashes(coords = [], currCoord) {
-  console.clear();
-  let result = '';
-  for (let y =0; y < rows.length;y++) {
-    let str = ''
-    for (let x = 0; x < rows[y].length;x++) {
-      // if (coords.find(c => c[0] == x && c[1] == y)) {
-      //   str += '#';
-      if (x == currCoord[0] && y == currCoord[1]) {
-        str += '#';
-      } else if (isNaN(rows[y][x])) {
-        str += '.'
-      } else {
 
-        str += rows[y][x];
-      }
-    }
-    str += '\n'
-    result += str;
-  }
-  console.log(result);
-}
 const part1 = zeroCoords.reduce((acc, val) => acc + val.score, 0)
 part2 = part2ZeroCoords.reduce((acc, val) => acc + val.score, 0);
 
