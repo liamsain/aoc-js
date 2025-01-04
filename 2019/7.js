@@ -11,7 +11,7 @@ const ints = input.split(',').map(x => Number(x));
 const base = 5;
 const max = parseInt('44444', base);
 debugger;
-for (let i = 0; i < max;i++) {
+for (let i = 2930; i < max;i++) {
   const phaseSettings = i.toString(base).padStart(5, '0');
 
   const ampAInput = [Number(phaseSettings[0]), 0];

@@ -29,13 +29,14 @@ describe('IntCode', () => {
     ];
     tests.forEach(t => {
       const ic = new IntCode(t.input);
-      const output = ic.compute();
-      expect(output).toStrictEqual(t.expected);
+      ic.compute();
+      expect(ic.ints).toStrictEqual(t.expected);
     });
   });
   it('Give correct output', () => {
     const tests = [
       {
+        // Take input. save to pos 0, output pos 0. end
         ints: [3, 0, 4, 0, 99],
         input: [800],
         expected: [800]
