@@ -4,6 +4,9 @@ const input = await getAdventOfCodeData(2019, 7);
 // const input = `3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0`;
 // const input = `3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0`
 const start = performance.now();
+let part1 = -Infinity;
+let part2 = -Infinity;
+const ints = input.split(',').map(x => Number(x));
 
 function allCharsAreUnique(str) {
   let obj = {};
@@ -18,8 +21,6 @@ function allCharsAreUnique(str) {
   }
   return result;
 }
-let part1 = -Infinity;
-const ints = input.split(',').map(x => Number(x));
 
 const base = 5;
 const max = parseInt('44444', base);
@@ -52,6 +53,16 @@ for (let i = 0; i < max;i++) {
   if (eOutput > part1) {
     part1 = eOutput;
   }
+}
+for (let i = 0; i < max;i++) {
+  const phaseSettings = i.toString(base).padStart(5, '0');
+  if (!allCharsAreUnique(phaseSettings)) {
+    continue;
+  }
+  debugger;
+  console.log(i);
+  const part2PhaseSettings = phaseSettings.split('').map(x => Number(x) + 5).join('');
+
 }
 
 const end = performance.now();
