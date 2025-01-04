@@ -4,16 +4,11 @@ const input = await getAdventOfCodeData(2019, 5);
 const start = performance.now();
 const nums = input.split(',').map(x => Number(x));
 
-// const deleteMe = new IntCode([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8], 8)
-
-// debugger;
-// deleteMe.compute();
-
-const ic = new IntCode(nums, 1);
+const ic = new IntCode(nums, [1]);
 ic.compute();
 
-const ic2 = new IntCode(nums, 5);
-ic2.compute(); // 15110804 too high
+const ic2 = new IntCode(nums, [5]);
+ic2.compute(); 
 
 
 const end = performance.now();
