@@ -13,8 +13,8 @@ p1IntCode.compute();
 const expectedOutput = 19690720;
 let foundExpected = false;
 const p2IntCode = new IntCode(ints);
-for (let noun = 0; noun < 99; noun += 1) {
-  for (let verb = 0; verb < 99; verb += 1) {
+for (let noun = 99; noun > 0; noun -= 1) {
+  for (let verb = 99; verb > 0; verb -= 1) {
     p2IntCode.ints[1] = noun;
     p2IntCode.ints[2] = verb;
     p2IntCode.compute();
@@ -23,7 +23,7 @@ for (let noun = 0; noun < 99; noun += 1) {
       part2 = 100 * noun + verb;
       break;
     } 
-    p2IntCode.reset(ints);
+    p2IntCode.reset();
   }
   if (foundExpected) {
     break;
