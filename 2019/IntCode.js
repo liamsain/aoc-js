@@ -1,7 +1,7 @@
 import { Operations, Modes, OperationTypes, ModeTypes } from './IntCodeTypes.js';
 
 export default class IntCode {
-  currentPos = 0;
+  currentProgramPos = 0;
   ints = [];
   originalInts = [];
   output = [];
@@ -15,13 +15,13 @@ export default class IntCode {
   }
   reset() {
     this.ints = [...this.originalInts];
-    this.currentPos = 0;
+    this.currentProgramPos = 0;
     this.currentInputPos = 0;
   }
   // note: Parameters that an instruction writes to will never be in immediate mode!
   compute() {
-    while (this.currentPos < this.programLength - 1) {
-      const currentNum = this.ints[this.currentPos];
+    while (this.currentProgramPos < this.programLength - 1) {
+      const currentNum = this.ints[this.currentProgramPos];
       if (currentNum == 99) {
         break;
       }
@@ -30,9 +30,9 @@ export default class IntCode {
       const strOp = strNum.padStart(MaxOpLength, '0')
       const opNum = Number(strOp.substring(3));
       const currentOp = Operations[opNum];
-      const firstParam = this.ints[this.currentPos + 1];
-      const secondParam = this.ints[this.currentPos + 2];
-      const thirdParam = this.ints[this.currentPos + 3];
+      const firstParam = this.ints[this.currentProgramPos + 1];
+      const secondParam = this.ints[this.currentProgramPos + 2];
+      const thirdParam = this.ints[this.currentProgramPos + 3];
 
       const firstParamMode = Modes[strOp[2]]
       const secondParamMode = Modes[strOp[1]]
@@ -69,39 +69,29 @@ export default class IntCode {
           break;
         case OperationTypes.JumpIfTrue:
           if (firstVal !== 0) {
-            this.currentPos = secondVal;
+            this.currentProgramPos = secondVal;
             shouldIncreaseCurrentPos = false;
           }
 
           break;
         case OperationTypes.JumpIfFalse:
           if (firstVal === 0) {
-            this.currentPos = secondVal;
+            this.currentProgramPos = secondVal;
             shouldIncreaseCurrentPos = false;
           }
 
           break;
         case OperationTypes.LessThan:
-          if (firstVal < secondVal) {
-            this.ints[thirdParam] = 1;
-          } else {
-            this.ints[thirdParam] = 0;
-          }
-
+          this.ints[thirdParam] = firstVal < secondVal ? 1 : 0;
           break;
         case OperationTypes.Equals:
-          if (firstVal == secondVal) {
-            this.ints[thirdParam] = 1;
-          } else {
-            this.ints[thirdParam] = 0;
-          }
-
+          this.ints[thirdParam] = firstVal == secondVal ? 1 : 0
           break;
         default:
           break;
       }
       if (shouldIncreaseCurrentPos) {
-        this.currentPos += currentOp.opLength;
+        this.currentProgramPos += currentOp.opLength;
       }
     }
   }
