@@ -6,7 +6,8 @@ export default class IntCode {
   originalInts = [];
   output = [];
   input = [];
-  currentInputPos = 0;
+  paused = false;
+  halted = false; // has program ended
   constructor(ints, input = []) {
     this.ints = [...ints];
     this.originalInts = [...ints];
@@ -16,13 +17,21 @@ export default class IntCode {
   reset() {
     this.ints = [...this.originalInts];
     this.currentProgramPos = 0;
-    this.currentInputPos = 0;
+  }
+  pushInputAndContinue(input) {
+    this.input.push(input);
+    this.paused = false;
+    this.compute();
+  }
+  get lastOutput() {
+    return this.output[this.output.length - 1];
   }
   // note: Parameters that an instruction writes to will never be in immediate mode!
   compute() {
-    while (this.currentProgramPos < this.programLength - 1) {
+    while (true) {
       const currentNum = this.ints[this.currentProgramPos];
-      if (currentNum == 99) {
+      if (currentNum == 99 || this.currentProgramPos >= this.programLength - 1) {
+        this.halted = true;
         break;
       }
       const MaxOpLength = 5;
@@ -50,14 +59,11 @@ export default class IntCode {
           this.ints[thirdParam] = firstVal * secondVal;
           break;
         case OperationTypes.Save:
-          if (this.input.length == 0) {
-            console.error('Tried to save input but it is empty');
+          if (this.input.length === 0) {
+            this.paused = true;
+            break;
           }
-          this.ints[firstParam] = this.input[this.currentInputPos];
-          this.currentInputPos++;
-          if (this.currentInputPos >= this.input.length) {
-            this.currentInputPos = 0;
-          }
+          this.ints[firstParam] = this.input.shift();
           break;
         case OperationTypes.Output:
           if (firstParamMode.type == ModeTypes.Position) {
@@ -88,7 +94,12 @@ export default class IntCode {
           this.ints[thirdParam] = firstVal == secondVal ? 1 : 0
           break;
         default:
+          this.halted = true;
           break;
+      }
+      if (this.paused) {
+        // must break on pause before programPos in incremented
+        break;
       }
       if (shouldIncreaseCurrentPos) {
         this.currentProgramPos += currentOp.opLength;
