@@ -1,8 +1,6 @@
-import { getAdventOfCodeData } from '../node-utils.js';
+import { getAdventOfCodeData, logTime } from '../node-utils.js';
 import IntCode from './IntCode.js';
 const input = await getAdventOfCodeData(2019, 7);
-// const input = `3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5`
-// const input = `3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10`
 const start = performance.now();
 let part1 = -Infinity;
 let part2 = -Infinity;
@@ -101,35 +99,34 @@ for (let i = 0; i < max; i++) {
 
   lastOutput = ampE.output[0];
   while (ampStates.some(x => x == 0)) {
-    debugger;
     if (ampA.halted) {
       ampStates[0] = 1;
     } else {
-      ampA.pushInputAndContinue(lastOutput);
+      ampA.pushInputAndContinue([lastOutput]);
       lastOutput = ampA.lastOutput;
     }
     if (ampB.halted) {
       ampStates[1] = 1;
     } else {
-      ampB.pushInputAndContinue(lastOutput);
+      ampB.pushInputAndContinue([lastOutput]);
       lastOutput = ampB.lastOutput;
     }
     if (ampC.halted) {
       ampStates[2] = 1;
     } else {
-      ampC.pushInputAndContinue(lastOutput);
+      ampC.pushInputAndContinue([lastOutput]);
       lastOutput = ampC.lastOutput;
     }
     if (ampD.halted) {
       ampStates[3] = 1;
     } else {
-      ampD.pushInputAndContinue(lastOutput);
+      ampD.pushInputAndContinue([lastOutput]);
       lastOutput = ampD.lastOutput;
     }
     if (ampE.halted) {
       ampStates[4] = 1;
     } else {
-      ampE.pushInputAndContinue(lastOutput);
+      ampE.pushInputAndContinue([lastOutput]);
       lastOutput = ampE.lastOutput;
     }
   }
@@ -142,5 +139,4 @@ for (let i = 0; i < max; i++) {
 const end = performance.now();
 console.log('part1: ', part1);
 console.log('part2: ', part2);
-const timeTaken = Math.round((end - start) * 1000) / 1000
-console.log('time taken', timeTaken, 'ms');
+logTime(end - start);

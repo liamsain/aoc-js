@@ -1,4 +1,4 @@
-export const OperationTypes = {
+export const OpTypes = {
   Add: 'Add',
   Multiply: 'Multiply',
   Save: 'Save',
@@ -6,45 +6,51 @@ export const OperationTypes = {
   JumpIfTrue: 'JumpIfTrue',
   JumpIfFalse: 'JumpIfFalse',
   LessThan: 'LessThan',
-  Equals: 'Equals'
+  Equals: 'Equals',
+  RelativeBaseChange: 'RelativeBaseChange'
 };
 export const Operations = {
   1: {
-    type: 'Add',
+    type: OpTypes.Add,
     opLength: 4
   },
   2: {
-    type: 'Multiply',
+    type: OpTypes.Multiply,
     opLength: 4
   },
   3: {
-    type: 'Save',
+    type: OpTypes.Save,
     opLength: 2
   },
   4: {
-    type: 'Output',
+    type: OpTypes.Output,
     opLength: 2
   },
   5: {
-    type: 'JumpIfTrue',
+    type: OpTypes.JumpIfTrue,
     opLength: 3
   },
   6: {
-    type: 'JumpIfFalse',
+    type: OpTypes.JumpIfFalse,
     opLength: 3
   },
   7: {
-    type: 'LessThan',
+    type: OpTypes.LessThan,
     opLength: 4
   },
   8: {
-    type: 'Equals',
+    type: OpTypes.Equals,
     opLength: 4
+  },
+  9: {
+    type: OpTypes.RelativeBaseChange,
+    opLength: 2
   }
 };
 export const ModeTypes = {
   Position: 'Position',
-  Immediate: 'Immediate'
+  Immediate: 'Immediate',
+  Relative: 'Relative'
 }
 export const Modes = {
   0: {
@@ -52,5 +58,8 @@ export const Modes = {
   },
   1: {
     type: ModeTypes.Immediate
+  },
+  2: {
+    type: ModeTypes.Relative
   }
 }

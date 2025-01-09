@@ -1,4 +1,4 @@
-import { getAdventOfCodeData } from '../node-utils.js';
+import { getAdventOfCodeData, logTime } from '../node-utils.js';
 const input = await getAdventOfCodeData(2019, 1);
 const start = performance.now();
 // const input = `100756`
@@ -19,5 +19,4 @@ input.split('\n').forEach(l => {
 const end = performance.now();
 console.log('part1: ', part1);
 console.log('part2: ', part2);
-const timeTaken = Math.round((end - start) * 10000) / 10000
-console.log('time taken', timeTaken, 'ms');
+logTime(end - start)

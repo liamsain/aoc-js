@@ -71,5 +71,19 @@ export async function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
 }
 
+export function logTime(milliseconds) {
+  let unit = 'milliseconds';
+  let val = milliseconds;
+  if (milliseconds < 1) {
+    val = milliseconds * 1000;
+    unit = 'microseconds';
+  } else if (milliseconds >= 1000) {
+    val = milliseconds / 1000;
+    unit = 'seconds';
+  }
+  let valToNearestThreeDecimalPoints = Math.round(val * 1000) / 1000;
+  console.log(`Time taken: ${valToNearestThreeDecimalPoints} ${unit}`);
+}
+
 
 

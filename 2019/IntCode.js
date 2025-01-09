@@ -1,32 +1,25 @@
-import { Operations, Modes, OperationTypes, ModeTypes } from './IntCodeTypes.js';
-
+import { Operations, Modes, OpTypes, ModeTypes } from './IntCodeTypes.js';
 export default class IntCode {
   currentProgramPos = 0;
+  relativeBase = 0;
   ints = [];
-  originalInts = [];
   output = [];
   input = [];
   paused = false;
-  halted = false; // has program ended
+  halted = false;
   constructor(ints, input = []) {
-    this.ints = [...ints];
-    this.originalInts = [...ints];
+    this.ints = [...ints, ...Array(ints.length * 10).fill(0)];
     this.programLength = this.ints.length;
-    this.input = input;
+    this.input = [...input];
   }
-  reset() {
-    this.ints = [...this.originalInts];
-    this.currentProgramPos = 0;
-  }
-  pushInputAndContinue(input) {
-    this.input.push(input);
+  pushInputAndContinue(input = []) {
+    this.input.push(...input);
     this.paused = false;
     this.compute();
   }
   get lastOutput() {
     return this.output[this.output.length - 1];
   }
-  // note: Parameters that an instruction writes to will never be in immediate mode!
   compute() {
     while (true) {
       const currentNum = this.ints[this.currentProgramPos];
@@ -47,58 +40,74 @@ export default class IntCode {
       const secondParamMode = Modes[strOp[1]]
       const thirdParamMode = Modes[strOp[0]]
 
-      const firstVal = firstParamMode.type == ModeTypes.Position ? this.ints[firstParam] : firstParam;
-      const secondVal = secondParamMode.type == ModeTypes.Position ? this.ints[secondParam] : secondParam;
+      const getParamVal = (param, paramMode) => {
+        if (paramMode.type == ModeTypes.Position) {
+          return this.ints[param];
+        } else if (paramMode.type == ModeTypes.Immediate) {
+          return param;
+        } else if (paramMode.type == ModeTypes.Relative) {
+          return this.ints[this.relativeBase + param];
+        }
+      }
+      const firstVal = getParamVal(firstParam, firstParamMode);
+      const secondVal = getParamVal(secondParam, secondParamMode);
+      // note: Parameters that an instruction writes to will never be in immediate mode!
+      const thirdVal = thirdParamMode.type == ModeTypes.Relative ? this.relativeBase + thirdParam : thirdParam;
 
       let shouldIncreaseCurrentPos = true;
       switch (currentOp.type) {
-        case OperationTypes.Add:
-          this.ints[thirdParam] = firstVal + secondVal;
+        case OpTypes.Add:
+          this.ints[thirdVal] = firstVal + secondVal;
           break;
-        case OperationTypes.Multiply:
-          this.ints[thirdParam] = firstVal * secondVal;
+        case OpTypes.Multiply:
+          this.ints[thirdVal] = firstVal * secondVal;
           break;
-        case OperationTypes.Save:
+        case OpTypes.Save:
           if (this.input.length === 0) {
             this.paused = true;
             break;
           }
-          this.ints[firstParam] = this.input.shift();
+          if (firstParamMode.type == ModeTypes.Relative) {
+            this.ints[this.relativeBase + firstParam] = this.input.shift();
+          } else {
+            this.ints[firstParam] = this.input.shift();
+          }
           break;
-        case OperationTypes.Output:
-          if (firstParamMode.type == ModeTypes.Position) {
+        case OpTypes.Output:
+          if (firstParamMode.type == ModeTypes.Relative) {
+            this.output.push(this.ints[firstParam + this.relativeBase]);
+          } else if (firstParamMode.type == ModeTypes.Position) {
             this.output.push(this.ints[firstParam])
           } else {
             this.output.push(firstParam);
           }
-
           break;
-        case OperationTypes.JumpIfTrue:
+        case OpTypes.JumpIfTrue:
           if (firstVal !== 0) {
             this.currentProgramPos = secondVal;
             shouldIncreaseCurrentPos = false;
           }
-
           break;
-        case OperationTypes.JumpIfFalse:
+        case OpTypes.JumpIfFalse:
           if (firstVal === 0) {
             this.currentProgramPos = secondVal;
             shouldIncreaseCurrentPos = false;
           }
-
           break;
-        case OperationTypes.LessThan:
-          this.ints[thirdParam] = firstVal < secondVal ? 1 : 0;
+        case OpTypes.LessThan:
+          this.ints[thirdVal] = firstVal < secondVal ? 1 : 0;
           break;
-        case OperationTypes.Equals:
-          this.ints[thirdParam] = firstVal == secondVal ? 1 : 0
+        case OpTypes.Equals:
+          this.ints[thirdVal] = firstVal == secondVal ? 1 : 0
+          break;
+        case OpTypes.RelativeBaseChange:
+          this.relativeBase += firstVal;
           break;
         default:
           this.halted = true;
           break;
       }
       if (this.paused) {
-        // must break on pause before programPos in incremented
         break;
       }
       if (shouldIncreaseCurrentPos) {

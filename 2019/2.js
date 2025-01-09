@@ -1,4 +1,4 @@
-import { getAdventOfCodeData } from '../node-utils.js';
+import { getAdventOfCodeData, logTime } from '../node-utils.js';
 const input = await getAdventOfCodeData(2019, 2);
 import IntCode from './IntCode.js';
 
@@ -12,7 +12,7 @@ p1IntCode.compute();
 
 const expectedOutput = 19690720;
 let foundExpected = false;
-const p2IntCode = new IntCode(ints);
+let p2IntCode = new IntCode(ints);
 for (let noun = 99; noun > 0; noun -= 1) {
   for (let verb = 99; verb > 0; verb -= 1) {
     p2IntCode.ints[1] = noun;
@@ -23,7 +23,7 @@ for (let noun = 99; noun > 0; noun -= 1) {
       part2 = 100 * noun + verb;
       break;
     } 
-    p2IntCode.reset();
+    p2IntCode = new IntCode(ints);
   }
   if (foundExpected) {
     break;
@@ -31,7 +31,6 @@ for (let noun = 99; noun > 0; noun -= 1) {
 }
 
 const end = performance.now();
-const timeTaken = Math.round((end - start) * 1000) / 1000
+logTime(end - start);
 console.log('part1: ', p1IntCode.ints[0]);
 console.log('part2: ', part2);
-console.log('time taken', timeTaken, 'ms');
