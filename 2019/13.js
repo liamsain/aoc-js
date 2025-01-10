@@ -29,7 +29,43 @@ Object.values(icMap).forEach(tile => {
         blockCount++;
     }
 });
+/*
+const readline = require('readline');
 
+// Enable raw mode to listen for individual key presses
+readline.emitKeypressEvents(process.stdin);
+if (process.stdin.isTTY) {
+  process.stdin.setRawMode(true);
+}
+
+// State for the game
+let position = 0;
+
+// Function to render the "game screen"
+function drawScreen() {
+  console.clear();
+  console.log("Use Left (←) and Right (→) arrow keys to move.");
+  console.log("Press 'q' to quit.");
+  console.log(`Position: ${position}`);
+}
+
+// Listen for keypress events
+process.stdin.on('keypress', (str, key) => {
+  if (key.name === 'q') {
+    console.log('Exiting game...');
+    process.exit();
+  } else if (key.name === 'left') {
+    position--;
+    drawScreen();
+  } else if (key.name === 'right') {
+    position++;
+    drawScreen();
+  }
+});
+
+// Initial screen draw
+drawScreen();
+*/
 const end = performance.now();
 console.log(blockCount);
 logTime(end - start);
