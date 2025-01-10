@@ -7,7 +7,7 @@ const start = performance.now();
 const nums = input.split(',').map(x => Number(x));
 let part1 = 0;
 
-function runProgram(input = [], dict = {}) {
+function runProgram(dict = {}) {
   // const dict = {};// k = `${x} ${y}`. value will be 0 for black, 1 for white
   let lowestx = 0;
   let highesty = 0;
@@ -66,16 +66,16 @@ function runProgram(input = [], dict = {}) {
   }
   return { dict, lowestx, highesty };
 }
-const result = runProgram([0]);
+const result = runProgram();
 part1 = Object.keys(result.dict).length;
 
 const part2Dict = {};
 part2Dict['0 0'] = 1;
-const result2 = runProgram([1], part2Dict);
+const result2 = runProgram(part2Dict);
 let str = '';
-for (let y = result2.highesty;y > (result2.highesty - 6);y--) {
+for (let y = result2.highesty; y > (result2.highesty - 6); y--) {
   let rowStr = '';
-  for (let x = result2.lowestx; x < (result2.lowestx + 42);x++) {
+  for (let x = result2.lowestx; x < (result2.lowestx + 42); x++) {
     const key = `${x} ${y}`;
     let ch = '';
     if (result2.dict[key] == 0) {
