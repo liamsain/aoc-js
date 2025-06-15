@@ -1,6 +1,6 @@
 import { getAdventOfCodeData, logTime } from '../node-utils.js';
-const input = await getAdventOfCodeData(2019, 1);
 const start = performance.now();
+const input = await getAdventOfCodeData(2019, 1);
 // const input = `100756`
 let part1 = 0;
 let part2 = 0;
