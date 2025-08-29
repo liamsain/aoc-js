@@ -6,6 +6,7 @@ import fs from 'fs';
 // -y year
 // -d day
 // -today 
+// -dataOnly: only get data, don't init a js file
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 function parseArgs(args) {
@@ -15,10 +16,12 @@ function parseArgs(args) {
     const arg = args[i];
     if (arg === '-y' && args[i + 1] !== undefined) {
       parsedArgs.year = args[i + 1];
-    } else if(arg === '-d' && args[i + 1] !== undefined) {
+    } else if (arg === '-d' && args[i + 1] !== undefined) {
       parsedArgs.day = args[i + 1];
-    } else if(arg === '-today') {
+    } else if (arg === '-today') {
       parsedArgs.today = true
+    } else if (arg == '-data-only') {
+      parsedArgs.dataOnly = true;
     }
   }
   return parsedArgs;
@@ -26,21 +29,27 @@ function parseArgs(args) {
 
 const args = process.argv.slice(2);
 const parsedArgs = parseArgs(args);
+const today = new Date();
+let year = parsedArgs.year;
+let day = parsedArgs.day;
 if (parsedArgs.today) {
-  const today = new Date();
-  const year = today.getFullYear().toString();
-  const day = today.getDate().toString();
-  createDayFile(year, day);
-} else {
-  createDayFile(parsedArgs.year, parsedArgs.day);
+  year = today.getFullYear().toString();
+  day = today.getDate().toString();
 }
+if (parsedArgs.dataOnly) {
+  getAdventOfCodeData(year, day);
+} else {
+  createDayFile(year, day);
+}
+
+
 
 function createDayFile(year, day) {
   // create a folder for the year if it does not exist
   const yearPath = path.join(__dirname, year);
   if (!fs.existsSync(yearPath)) {
     fs.mkdirSync(yearPath);
-  } 
+  }
 
 
   // create a js file for the day in the year folder if the day file does not exist

@@ -1,56 +1,55 @@
 #include <stdio.h>
 #include "timer_utils.h"
+#include <string.h>
 
 int main()
 {
   timer_start();
 
+  char charNums[4500];
   FILE *fp = fopen("../2017-1-input.txt", "r");
-  int nums[3000];
-
-  if (fp == NULL)
+  if (!fp)
   {
-    printf("Could not open file");
+    printf("could not open file");
     return 1;
   }
-  int first = fgetc(fp) - '0';
-  nums[0] = first;
-  int totalNumbers = 1;
-  int prev = first;
-  int curr = 0;
+
+  fgets(charNums, sizeof(charNums), fp);
   int part1 = 0;
   int part2 = 0;
-  while ((curr = fgetc(fp)) != EOF)
+  int currentIndex = 0;
+  int actualNumsLength = strlen(charNums);
+  int curr = 0;
+  int middle = actualNumsLength / 2;
+  while (currentIndex < actualNumsLength)
   {
-    int i = curr - '0';
-    nums[totalNumbers] = i;
-    totalNumbers += 1;
-    if (i == prev)
+    curr = charNums[currentIndex] - '0';
+    int next = charNums[currentIndex + 1] - '0';
+    if (curr == next)
     {
-      part1 += i;
+      part1 += curr;
     }
-    prev = i;
-  }
-  fclose(fp);
-  if (first == prev)
-  {
-    part1 += first;
-  }
-  int middle = totalNumbers / 2;
-  curr = 0;
-  while (curr < middle) {
-    int cmpIndex = curr + middle;
-    if (nums[curr] == nums[cmpIndex]) {
-      part2 += nums[curr] * 2;
+    if (curr == charNums[currentIndex + middle] - '0')
+    {
+      if (currentIndex <= middle)
+      {
+        part2 += curr * 2;
+      }
     }
-    curr += 1;
+
+    currentIndex += 1;
   }
 
+  if (curr == charNums[0] - '0')
+  {
+    part1 += curr;
+  }
 
   double elapsed = timer_elapsed_microseconds();
-  printf("Elapsed: %.3f us\n", elapsed);
-  printf("Part 1: %d\n", part1);
-  printf("Part 2: %d\n", part2);
+  printf("\nElapsed: %.3f us\n", elapsed);
+  printf("Part 1: %d", part1);
+  printf("\nPart 2: %d", part2);
 
+  fclose(fp);
   return 0;
 }
